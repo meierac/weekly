@@ -13,9 +13,15 @@ interface WeekSelectorProps {
   year: number;
   week: number;
   onWeekChange: (year: number, week: number) => void;
+  compact?: boolean;
 }
 
-export function WeekSelector({ year, week, onWeekChange }: WeekSelectorProps) {
+export function WeekSelector({
+  year,
+  week,
+  onWeekChange,
+  compact = false,
+}: WeekSelectorProps) {
   const currentYear = new Date().getFullYear();
   const currentWeek = getWeekNumber(new Date());
   const years = Array.from({ length: 5 }, (_, i) => currentYear - 2 + i);
@@ -95,36 +101,44 @@ export function WeekSelector({ year, week, onWeekChange }: WeekSelectorProps) {
 
   return (
     <div className="flex items-center gap-1.5 md:gap-2">
-      {/* Navigation buttons */}
-      <div className="flex items-center gap-0.5 md:gap-1">
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={handlePreviousWeek}
-          className="h-9 w-9 md:h-8 md:w-8 p-0 rounded-lg hover:bg-gray-100 active:bg-gray-200 transition-colors"
-          title="Vorherige Woche"
-        >
-          <ChevronLeft className="h-5 w-5 md:h-4 md:w-4 text-gray-600" />
-        </Button>
+      {/* Navigation buttons - hidden in compact mode */}
+      {!compact && (
+        <div className="flex items-center gap-0.5 md:gap-1">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={handlePreviousWeek}
+            className="h-9 w-9 md:h-8 md:w-8 p-0 rounded-lg hover:bg-gray-100 active:bg-gray-200 transition-colors"
+            title="Vorherige Woche"
+          >
+            <ChevronLeft className="h-5 w-5 md:h-4 md:w-4 text-gray-600" />
+          </Button>
 
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={handleNextWeek}
-          className="h-9 w-9 md:h-8 md:w-8 p-0 rounded-lg hover:bg-gray-100 active:bg-gray-200 transition-colors"
-          title="Nächste Woche"
-        >
-          <ChevronRight className="h-5 w-5 md:h-4 md:w-4 text-gray-600" />
-        </Button>
-      </div>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={handleNextWeek}
+            className="h-9 w-9 md:h-8 md:w-8 p-0 rounded-lg hover:bg-gray-100 active:bg-gray-200 transition-colors"
+            title="Nächste Woche"
+          >
+            <ChevronRight className="h-5 w-5 md:h-4 md:w-4 text-gray-600" />
+          </Button>
+        </div>
+      )}
 
       {/* Week display and selectors */}
-      <div className="flex items-center gap-1.5 md:gap-2 px-2.5 md:px-3 py-2 md:py-1.5 bg-gray-50/80 rounded-lg border border-gray-200/60">
+      <div
+        className={`flex items-center gap-1.5 md:gap-2 px-2.5 md:px-3 py-2 md:py-1.5 bg-gray-50/80 rounded-lg border border-gray-200/60 ${compact ? "py-1.5" : ""}`}
+      >
         <Calendar className="h-4 w-4 md:h-3.5 md:w-3.5 text-gray-500" />
 
-        <div className="flex items-center gap-1 md:gap-1.5">
+        <div
+          className={`flex items-center gap-1 md:gap-1.5 ${compact ? "gap-1" : ""}`}
+        >
           <Select value={year.toString()} onValueChange={handleYearChange}>
-            <SelectTrigger className="w-[70px] h-8 md:h-7 text-sm border-0 bg-transparent hover:bg-white/80 focus:ring-1 focus:ring-blue-500/50 rounded-md">
+            <SelectTrigger
+              className={`w-[70px] h-8 md:h-7 text-sm border-0 bg-transparent hover:bg-white/80 focus:ring-1 focus:ring-blue-500/50 rounded-md ${compact ? "h-7 text-sm" : ""}`}
+            >
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -136,10 +150,16 @@ export function WeekSelector({ year, week, onWeekChange }: WeekSelectorProps) {
             </SelectContent>
           </Select>
 
-          <span className="text-xs font-medium text-gray-500 px-0.5">KW</span>
+          <span
+            className={`text-xs font-medium text-gray-500 px-0.5 ${compact ? "text-[10px]" : ""}`}
+          >
+            KW
+          </span>
 
           <Select value={week.toString()} onValueChange={handleWeekChange}>
-            <SelectTrigger className="w-[60px] h-8 md:h-7 text-sm border-0 bg-transparent hover:bg-white/80 focus:ring-1 focus:ring-blue-500/50 rounded-md">
+            <SelectTrigger
+              className={`w-[60px] h-8 md:h-7 text-sm border-0 bg-transparent hover:bg-white/80 focus:ring-1 focus:ring-blue-500/50 rounded-md ${compact ? "h-7 text-sm" : ""}`}
+            >
               <SelectValue />
             </SelectTrigger>
             <SelectContent className="max-h-64">
@@ -152,13 +172,15 @@ export function WeekSelector({ year, week, onWeekChange }: WeekSelectorProps) {
           </Select>
         </div>
 
-        <div className="text-xs text-gray-600 border-l border-gray-300 pl-2 hidden lg:block">
-          {getWeekDateRange()}
-        </div>
+        {!compact && (
+          <div className="text-xs text-gray-600 border-l border-gray-300 pl-2 hidden lg:block">
+            {getWeekDateRange()}
+          </div>
+        )}
       </div>
 
-      {/* Current week button */}
-      {!isCurrentWeek && (
+      {/* Current week button - hidden in compact mode */}
+      {!compact && !isCurrentWeek && (
         <Button
           variant="outline"
           size="sm"
@@ -169,8 +191,8 @@ export function WeekSelector({ year, week, onWeekChange }: WeekSelectorProps) {
         </Button>
       )}
 
-      {/* Current week indicator */}
-      {isCurrentWeek && (
+      {/* Current week indicator - hidden in compact mode */}
+      {!compact && isCurrentWeek && (
         <div className="flex items-center gap-1.5 text-xs text-blue-600 bg-blue-50 px-2.5 md:px-2 py-1.5 md:py-1 rounded-lg hidden sm:flex">
           <div className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-pulse" />
           <span className="font-medium">Heute</span>

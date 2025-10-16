@@ -640,6 +640,7 @@ export function WeeklyAgenda() {
               year={currentWeekData.year}
               week={currentWeekData.week}
               onWeekChange={handleWeekChange}
+              compact={true}
             />
           }
           onAddTask={handleMobileAddTask}

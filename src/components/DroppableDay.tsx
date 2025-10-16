@@ -85,8 +85,8 @@ export function DroppableDay({
   const weekend = isWeekend(dateStr);
 
   // Generate time slots for drop zones
+  // Reduced set for mobile optimization
   const timeSlots = [
-    "06:00",
     "07:00",
     "08:00",
     "09:00",
@@ -218,7 +218,7 @@ export function DroppableDay({
                 </span>
               </div>
 
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-1.5">
+              <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 gap-1.5 md:gap-1.5">
                 {timeSlots.map((time) => (
                   <button
                     key={time}
@@ -230,7 +230,7 @@ export function DroppableDay({
                       }
                     }}
                     className={`
-                      px-3 py-2.5 md:px-2 md:py-1.5 text-sm md:text-xs font-medium rounded-lg md:rounded transition-all active:scale-95
+                      px-2 py-2 md:px-2 md:py-1.5 text-xs md:text-xs font-medium rounded-md md:rounded transition-all active:scale-95
                       ${
                         draggedTask
                           ? "bg-white border border-green-200 hover:border-green-300 hover:bg-green-50 text-green-700 active:bg-green-100"
@@ -253,7 +253,7 @@ export function DroppableDay({
                     }
                   }}
                   className={`
-                    w-full px-3 py-1.5 text-xs font-medium rounded transition-all
+                    w-full px-3 py-2 text-xs font-medium rounded-md transition-all
                     ${
                       draggedTask
                         ? "bg-green-100 hover:bg-green-200 text-green-800 border border-green-300"

@@ -79,50 +79,50 @@ export function MobileBottomNav({
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
       >
-        <div className="px-3 py-2.5">
+        <div className="px-2 py-2">
           {/* Swipe Indicator */}
-          <div className="flex justify-center mb-2">
+          <div className="flex justify-center mb-1.5">
             <div className="w-12 h-1 bg-gray-300 rounded-full" />
           </div>
 
           {/* Single Row Layout */}
-          <div className="flex items-center gap-2">
-            {/* Week Navigation Section */}
-            <div className="flex-1 flex justify-center min-w-0">
+          <div className="flex items-center gap-1.5">
+            {/* Week Navigation Section - Compact */}
+            <div className="flex-1 flex justify-center min-w-0 overflow-hidden">
               {weekSelector}
             </div>
 
             {/* Vertical Divider */}
-            <div className="w-px h-8 bg-gray-300" />
+            <div className="w-px h-7 bg-gray-300" />
 
             {/* Action Buttons */}
-            <div className="flex items-center gap-1.5">
+            <div className="flex items-center gap-0.5">
               <Button
                 size="sm"
                 variant="ghost"
                 onClick={onAddTask}
-                className="h-10 w-10 p-0 rounded-lg hover:bg-blue-50 hover:text-blue-600 active:bg-blue-100"
+                className="h-9 w-9 p-0 rounded-lg hover:bg-blue-50 hover:text-blue-600 active:bg-blue-100"
                 title="Aufgabe hinzufügen"
               >
-                <Plus className="h-5 w-5 text-blue-600" />
+                <Plus className="h-4 w-4 text-blue-600" />
               </Button>
               <Button
                 size="sm"
                 variant="ghost"
                 onClick={onNativeShare}
-                className="h-10 w-10 p-0 rounded-lg hover:bg-gray-100 hover:text-gray-700 active:bg-gray-200"
+                className="h-9 w-9 p-0 rounded-lg hover:bg-gray-100 hover:text-gray-700 active:bg-gray-200"
                 title="Teilen"
               >
-                <Share2 className="h-5 w-5 text-gray-600" />
+                <Share2 className="h-4 w-4 text-gray-600" />
               </Button>
               <Button
                 size="sm"
                 variant="ghost"
                 onClick={() => setMenuOpen(true)}
-                className="h-10 w-10 p-0 rounded-lg hover:bg-gray-100 hover:text-gray-700 active:bg-gray-200"
+                className="h-9 w-9 p-0 rounded-lg hover:bg-gray-100 hover:text-gray-700 active:bg-gray-200"
                 title="Mehr Optionen"
               >
-                <ChevronUp className="h-5 w-5 text-gray-600" />
+                <ChevronUp className="h-4 w-4 text-gray-600" />
               </Button>
             </div>
           </div>
@@ -131,94 +131,94 @@ export function MobileBottomNav({
 
       {/* Menu Sheet */}
       <Sheet open={menuOpen} onOpenChange={setMenuOpen}>
-        <SheetContent side="bottom" className="h-auto max-h-[80vh]">
+        <SheetContent side="bottom" className="h-auto max-h-[75vh] pb-safe">
           <SheetHeader>
             <SheetTitle>Aktionen</SheetTitle>
           </SheetHeader>
 
-          <div className="grid grid-cols-2 gap-3 mt-6">
+          <div className="grid grid-cols-2 gap-2.5 mt-4">
             {/* Add Task */}
             <Button
               variant="outline"
-              className="h-20 flex-col gap-2"
+              className="h-16 flex-col gap-1.5"
               onClick={() => {
                 onAddTask();
                 setMenuOpen(false);
               }}
             >
-              <Plus className="h-5 w-5" />
-              <span className="text-sm">Aufgabe</span>
+              <Plus className="h-4 w-4" />
+              <span className="text-xs">Aufgabe</span>
             </Button>
 
             {/* Preview */}
             <Button
               variant="outline"
-              className="h-20 flex-col gap-2"
+              className="h-16 flex-col gap-1.5"
               onClick={() => {
                 onPreview();
                 setMenuOpen(false);
               }}
             >
-              <Eye className="h-5 w-5" />
-              <span className="text-sm">Vorschau</span>
+              <Eye className="h-4 w-4" />
+              <span className="text-xs">Vorschau</span>
             </Button>
 
             {/* Share */}
             <Button
               variant="outline"
-              className="h-20 flex-col gap-2"
+              className="h-16 flex-col gap-1.5"
               onClick={() => {
                 onShare();
                 setMenuOpen(false);
               }}
             >
-              <Share2 className="h-5 w-5" />
-              <span className="text-sm">Teilen</span>
+              <Share2 className="h-4 w-4" />
+              <span className="text-xs">Teilen</span>
             </Button>
 
             {/* Export */}
             <Button
               variant="outline"
-              className="h-20 flex-col gap-2"
+              className="h-16 flex-col gap-1.5"
               onClick={() => {
                 onExport();
                 setMenuOpen(false);
               }}
             >
-              <Download className="h-5 w-5" />
-              <span className="text-sm">Export</span>
+              <Download className="h-4 w-4" />
+              <span className="text-xs">Export</span>
             </Button>
 
             {/* Templates */}
             <Button
               variant="outline"
-              className="h-20 flex-col gap-2"
+              className="h-16 flex-col gap-1.5"
               onClick={() => {
                 onTemplates();
                 setMenuOpen(false);
               }}
             >
-              <BookOpen className="h-5 w-5" />
-              <span className="text-sm">Vorlagen</span>
+              <BookOpen className="h-4 w-4" />
+              <span className="text-xs">Vorlagen</span>
             </Button>
 
             {/* iCal */}
             <Button
               variant="outline"
-              className="h-20 flex-col gap-2"
+              className="h-16 flex-col gap-1.5"
               onClick={() => {
                 onIcal();
                 setMenuOpen(false);
               }}
             >
-              <Calendar className="h-5 w-5" />
-              <span className="text-sm">iCal</span>
+              <Calendar className="h-4 w-4" />
+              <span className="text-xs">iCal</span>
             </Button>
 
             {/* Sync All */}
             <Button
               variant="outline"
-              className="h-20 flex-col gap-2"
+              className="h-16 flex-col gap-1.5"
               onClick={() => {
                 onSyncAll();
                 setMenuOpen(false);
@@ -226,22 +226,22 @@ export function MobileBottomNav({
               disabled={isSyncing}
             >
               <RefreshCw
-                className={`h-5 w-5 ${isSyncing ? "animate-spin" : ""}`}
+                className={`h-4 w-4 ${isSyncing ? "animate-spin" : ""}`}
               />
-              <span className="text-sm">Sync</span>
+              <span className="text-xs">Sync</span>
             </Button>
 
             {/* About */}
             <Button
               variant="outline"
-              className="h-20 flex-col gap-2"
+              className="h-16 flex-col gap-1.5"
               onClick={() => {
                 onAbout();
                 setMenuOpen(false);
               }}
             >
-              <Info className="h-5 w-5" />
-              <span className="text-sm">Info</span>
+              <Info className="h-4 w-4" />
+              <span className="text-xs">Info</span>
             </Button>
           </div>
         </SheetContent>
