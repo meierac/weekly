@@ -19,7 +19,6 @@ import { AboutDialog } from "@/components/AboutDialog";
 import { ShareDialog } from "@/components/ShareDialog";
 import { MobileBottomNav } from "@/components/MobileBottomNav";
 import { DaySelectorSheet } from "@/components/DaySelectorSheet";
-import { CustomTitleBar } from "@/components/CustomTitleBar";
 import {
   Dialog,
   DialogContent,
@@ -448,9 +447,6 @@ export function WeeklyAgenda() {
       onDragEnd={handleDragEnd}
     >
       <div className="min-h-screen bg-gray-50 pb-24 md:pb-0">
-        {/* Custom Window Title Bar for Windows PWA */}
-        <CustomTitleBar title="Wochenplaner" />
-
         {/* Desktop Navigation Bar - Apple Style */}
         <div
           className={`hidden md:block bg-white/95 backdrop-blur-md border-b border-gray-200/80 sticky top-0 z-40 transition-shadow duration-300 ${toolbarScrolled ? "shadow-md" : "shadow-sm"}`}
@@ -641,14 +637,9 @@ export function WeeklyAgenda() {
 
         {/* Mobile Bottom Navigation */}
         <MobileBottomNav
-          weekSelector={
-            <WeekSelector
-              year={currentWeekData.year}
-              week={currentWeekData.week}
-              onWeekChange={handleWeekChange}
-              compact={true}
-            />
-          }
+          year={currentWeekData.year}
+          week={currentWeekData.week}
+          onWeekChange={handleWeekChange}
           onAddTask={handleMobileAddTask}
           onPreview={handlePreview}
           onShare={() => setShareDialogOpen(true)}

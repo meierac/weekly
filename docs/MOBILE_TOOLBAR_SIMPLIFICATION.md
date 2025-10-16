@@ -9,24 +9,26 @@ The mobile bottom toolbar has been simplified for better usability on smaller sc
 ### Before (Previous Design)
 
 The mobile toolbar had:
-- Week selector (year + KW)
-- Add task button
-- Share button  
+- Week selector (year + KW with custom dropdown UI)
+- Add task button (right)
+- Share button (middle)
 - **Expand/More options button (ChevronUp icon)**
 - Vertical divider
 
 **Total buttons: 3 action buttons + week selector**
 
-### After (Simplified Design)
+### After (Final Simplified Design)
 
 The mobile toolbar now has:
-- Week selector (year + KW) - **compact mode, no navigation arrows**
-- Add task button
-- Share button
+- **Share button (LEFT)** - repositioned
+- **Week selector (CENTER)** - using native browser selects, no decorators
+- **Add task button (RIGHT)** - repositioned
 - ~~Expand button~~ **REMOVED**
-- Vertical divider
+- ~~Vertical divider~~ **REMOVED**
 
-**Total buttons: 2 action buttons + week selector**
+**Total buttons: 2 action buttons + native week selector**
+
+**Layout:** Share | Year/Week Selector | Add Task
 
 ## Rationale
 
@@ -36,6 +38,21 @@ The mobile toolbar now has:
 2. **Screen Space**: Every pixel counts on iPhone 13 mini (375px width)
 3. **Cleaner Interface**: Less visual clutter, more focus on primary actions
 4. **Discoverability**: The swipe indicator at the top of the toolbar hints at the gesture
+
+### Why Use Native Selects?
+
+1. **Familiarity**: Users are accustomed to native browser/OS select controls
+2. **No Custom UI**: Removes decorators, dropdowns, and custom styling
+3. **Smaller Footprint**: Native selects are more compact than custom components
+4. **Better Accessibility**: Native controls have built-in accessibility features
+5. **Platform Consistency**: Matches OS-native look and feel
+
+### Why Reorganize Button Layout?
+
+1. **Balanced Layout**: Share (left) and Add (right) create visual symmetry
+2. **Center Focus**: Week selector is the most important info, placed centrally
+3. **Thumb-Friendly**: Common actions accessible from both left and right thumbs
+4. **No Dividers Needed**: Clear spacing and symmetry make dividers unnecessary
 
 ### Primary Actions Kept
 
@@ -62,10 +79,16 @@ All other actions remain accessible via swipe-up gesture:
 ┌─────────────────────────────────────┐
 │     ············ (swipe indicator)  │
 │                                     │
-│  [📅 2024 KW 42]  │  [+]  [↗]     │
+│  [↗]     2024 KW 42          [+]   │
+│          ▼       ▼                  │
 │                                     │
 └─────────────────────────────────────┘
 ```
+
+**Legend:**
+- `[↗]` - Share button (left)
+- `2024 KW 42` - Native select dropdowns (center, with down arrows)
+- `[+]` - Add task button (right)
 
 ### Spacing & Sizing
 
@@ -73,8 +96,10 @@ All other actions remain accessible via swipe-up gesture:
 - **Padding**: `px-2 py-2` (8px horizontal, 8px vertical)
 - **Button size**: `h-9 w-9` (36px × 36px)
 - **Icon size**: `h-4 w-4` (16px × 16px)
-- **Gap between buttons**: `gap-1` (4px)
+- **Layout**: `justify-between` (full width spacing)
+- **Week selector padding**: `px-2` (8px horizontal)
 - **Swipe indicator**: 48px wide, 4px tall, rounded
+- **Native selects**: No borders, transparent background, text-sm
 
 ## Interaction Design
 
@@ -87,17 +112,25 @@ All other actions remain accessible via swipe-up gesture:
 
 ### Button Interactions
 
-1. **Add Task Button**
-   - Color: Blue (`text-blue-600`)
-   - Hover: `bg-blue-50`
-   - Active: `bg-blue-100`
-   - Opens day selector sheet
-
-2. **Share Button**
+1. **Share Button** (Left)
    - Color: Gray (`text-gray-600`)
    - Hover: `bg-gray-100`
    - Active: `bg-gray-200`
    - Triggers native share if available
+
+2. **Week Selector** (Center)
+   - Native `<select>` elements
+   - Year selector (e.g., "2024")
+   - "KW" label between selectors
+   - Week number selector (1-52/53)
+   - No borders or custom styling
+   - Uses browser's native dropdown UI
+
+3. **Add Task Button** (Right)
+   - Color: Blue (`text-blue-600`)
+   - Hover: `bg-blue-50`
+   - Active: `bg-blue-100`
+   - Opens day selector sheet
 
 ## Accessibility
 
@@ -125,36 +158,55 @@ All other actions remain accessible via swipe-up gesture:
 **Removed:**
 - ChevronUp icon import
 - Expand button from action buttons section
+- Vertical divider between elements
+- `weekSelector` prop (ReactNode)
 
-**Kept:**
-- Swipe gesture handlers
-- Menu sheet (still accessible via swipe)
-- All menu items in sheet
+**Added:**
+- `year`, `week`, `onWeekChange` props (direct values)
+- Import of `MobileWeekSelector` component
+- `justify-between` layout (full width spacing)
 
-**Adjusted:**
-- Gap between elements: `gap-1.5` → `gap-2` (main row)
-- Gap between buttons: `gap-0.5` → `gap-1` (action buttons)
+**New Component: `MobileWeekSelector.tsx`**
+
+Created a new simplified component:
+- Uses native `<select>` elements
+- No custom UI components (Select, SelectTrigger, etc.)
+- `appearance-none` to remove default arrow (uses native dropdown)
+- Transparent background, no borders
+- Direct year/week selection with native OS controls
+
+**Layout Changes:**
+- Changed from: `[Week Selector | Divider | Buttons]`
+- Changed to: `[Share Button | Week Selector | Add Button]`
+- Uses `justify-between` for balanced spacing
 
 ## User Experience Benefits
 
 1. **Cleaner Interface**: Less cognitive load with fewer visible buttons
-2. **More Space**: Week selector has more breathing room
+2. **More Space**: Week selector has more breathing room in center
 3. **Gesture-Driven**: Modern interaction pattern (swipe to expand)
 4. **Touch-Friendly**: Larger touch targets with better spacing
 5. **iPhone 13 Mini Optimized**: Makes better use of limited screen width
+6. **Native Controls**: Familiar OS-native select behavior
+7. **Balanced Layout**: Symmetrical design with actions on both sides
+8. **No Decorators**: Minimal UI without custom dropdown decorators
 
 ## Testing Recommendations
 
 ### Test Cases
 
-1. ✅ Verify swipe-up gesture opens menu
-2. ✅ Test add task button functionality
-3. ✅ Test share button (native share)
-4. ✅ Confirm week selector fits without overflow
-5. ✅ Check touch target sizes on actual device
-6. ✅ Verify menu sheet contains all actions
-7. ✅ Test on iPhone 13 mini (375px width)
-8. ✅ Test on larger phones (ensure consistency)
+1. ✅ Verify swipe-up gesture opens menu (without background scroll)
+2. ✅ Test add task button functionality (right side)
+3. ✅ Test share button (left side, native share)
+4. ✅ Test native year selector dropdown
+5. ✅ Test native week selector dropdown
+6. ✅ Confirm week selector centered correctly
+7. ✅ Verify no background scrolling during swipe
+8. ✅ Check touch target sizes on actual device
+9. ✅ Verify menu sheet contains all actions
+10. ✅ Test on iPhone 13 mini (375px width)
+11. ✅ Test on larger phones (ensure consistency)
+12. ✅ Test native select behavior across browsers
 
 ### Device Testing
 
@@ -172,6 +224,8 @@ All other actions remain accessible via swipe-up gesture:
 3. **Gesture Tutorial**: First-time user hint about swipe gesture
 4. **Customizable Actions**: Let users choose which 2 buttons to show
 5. **Long Press**: Alternative gesture for power users
+6. **Quick Week Navigation**: Add swipe left/right on selector to change weeks
+7. **Current Week Indicator**: Visual highlight when viewing current week
 
 ### Metrics to Track
 
@@ -186,6 +240,29 @@ All other actions remain accessible via swipe-up gesture:
 - [Mobile UI Guidelines](../README.md#mobile-interface)
 - Week Selector compact mode implementation
 
+## Technical Details
+
+### Native Select Styling
+
+```css
+appearance-none           /* Remove default browser styling */
+bg-transparent           /* Transparent background */
+border-none             /* No borders */
+text-sm                 /* 14px font size */
+font-medium             /* Medium weight */
+text-gray-700           /* Dark gray text */
+focus:outline-none      /* Remove focus ring */
+cursor-pointer          /* Pointer cursor */
+```
+
+### Swipe Gesture Improvements
+
+- `touch-action: none` on toolbar
+- `preventDefault()` on upward swipes (diff > 10px)
+- `stopPropagation()` to prevent event bubbling
+- Non-passive event listeners for cancelable events
+- Proper cleanup of touch event listeners
+
 ## Conclusion
 
-The simplified mobile toolbar provides a cleaner, more focused interface that's optimized for smaller screens while maintaining full functionality through intuitive swipe gestures. This approach aligns with modern mobile design patterns and improves the user experience on devices like iPhone 13 mini.
+The simplified mobile toolbar provides a cleaner, more focused interface that's optimized for smaller screens while maintaining full functionality through intuitive swipe gestures. The use of native select controls provides a familiar, accessible experience, while the balanced layout (Share | Week Selector | Add) creates a visually pleasing and ergonomic design. This approach aligns with modern mobile design patterns and improves the user experience on devices like iPhone 13 mini.

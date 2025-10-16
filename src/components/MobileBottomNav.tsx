@@ -16,9 +16,12 @@ import {
   Info,
   Download,
 } from "lucide-react";
+import { MobileWeekSelector } from "@/components/MobileWeekSelector";
 
 interface MobileBottomNavProps {
-  weekSelector: React.ReactNode;
+  year: number;
+  week: number;
+  onWeekChange: (year: number, week: number) => void;
   onAddTask: () => void;
   onPreview: () => void;
   onShare: () => void;
@@ -32,7 +35,9 @@ interface MobileBottomNavProps {
 }
 
 export function MobileBottomNav({
-  weekSelector,
+  year,
+  week,
+  onWeekChange,
   onAddTask,
   onPreview,
   onShare,
@@ -114,51 +119,63 @@ export function MobileBottomNav({
 
   return (
     <>
-      {/* Fixed Bottom Navigation Bar */}
+      {/* Floating Bottom Navigation Bar - iOS 18 Style */}
       <div
-        ref={toolbarRef}
-        className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-lg z-40 md:hidden touch-none"
-        onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
-        onTouchEnd={handleTouchEnd}
-        style={{ touchAction: "none" }}
+        className="fixed bottom-0 left-0 right-0 z-40 md:hidden pointer-events-none px-3"
+        style={{
+          paddingBottom: "calc(1rem + env(safe-area-inset-bottom, 0px))",
+        }}
       >
-        <div className="px-2 py-2">
-          {/* Swipe Indicator */}
-          <div className="flex justify-center mb-1.5">
-            <div className="w-12 h-1 bg-gray-300 rounded-full" />
-          </div>
-
-          {/* Single Row Layout */}
-          <div className="flex items-center gap-2">
-            {/* Week Navigation Section - Compact */}
-            <div className="flex-1 flex justify-center min-w-0 overflow-hidden">
-              {weekSelector}
+        <div
+          ref={toolbarRef}
+          className="bg-white/95 backdrop-blur-xl border border-gray-200 shadow-lg rounded-2xl pointer-events-auto touch-none"
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+          style={{ touchAction: "none" }}
+        >
+          <div className="px-3 py-2.5">
+            {/* Swipe Indicator */}
+            <div className="flex justify-center mb-2">
+              <div className="w-12 h-1 bg-gray-300 rounded-full" />
             </div>
 
-            {/* Vertical Divider */}
-            <div className="w-px h-7 bg-gray-300" />
+            {/* Single Row Layout - Share | Week Selector | Add */}
+            <div className="flex items-center">
+              {/* Left: Share Button (centered in its space) */}
+              <div className="flex-1 flex justify-center">
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={onNativeShare}
+                  className="h-9 w-9 p-0 rounded-lg hover:bg-gray-100 hover:text-gray-700 active:bg-gray-200"
+                  title="Teilen"
+                >
+                  <Share2 className="h-4 w-4 text-gray-600" />
+                </Button>
+              </div>
 
-            {/* Action Buttons */}
-            <div className="flex items-center gap-1">
-              <Button
-                size="sm"
-                variant="ghost"
-                onClick={onAddTask}
-                className="h-9 w-9 p-0 rounded-lg hover:bg-blue-50 hover:text-blue-600 active:bg-blue-100"
-                title="Aufgabe hinzufügen"
-              >
-                <Plus className="h-4 w-4 text-blue-600" />
-              </Button>
-              <Button
-                size="sm"
-                variant="ghost"
-                onClick={onNativeShare}
-                className="h-9 w-9 p-0 rounded-lg hover:bg-gray-100 hover:text-gray-700 active:bg-gray-200"
-                title="Teilen"
-              >
-                <Share2 className="h-4 w-4 text-gray-600" />
-              </Button>
+              {/* Center: Week Selector */}
+              <div className="flex justify-center px-2">
+                <MobileWeekSelector
+                  year={year}
+                  week={week}
+                  onWeekChange={onWeekChange}
+                />
+              </div>
+
+              {/* Right: Add Button (centered in its space) */}
+              <div className="flex-1 flex justify-center">
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={onAddTask}
+                  className="h-9 w-9 p-0 rounded-lg hover:bg-blue-50 hover:text-blue-600 active:bg-blue-100"
+                  title="Aufgabe hinzufügen"
+                >
+                  <Plus className="h-4 w-4 text-blue-600" />
+                </Button>
+              </div>
             </div>
           </div>
         </div>
