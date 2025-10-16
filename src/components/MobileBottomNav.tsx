@@ -15,7 +15,6 @@ import {
   RefreshCw,
   Info,
   Download,
-  ChevronUp,
 } from "lucide-react";
 
 interface MobileBottomNavProps {
@@ -48,6 +47,7 @@ export function MobileBottomNav({
   const [menuOpen, setMenuOpen] = React.useState(false);
   const [startY, setStartY] = React.useState(0);
   const [isDragging, setIsDragging] = React.useState(false);
+  const toolbarRef = React.useRef<HTMLDivElement>(null);
 
   const handleTouchStart = (e: React.TouchEvent) => {
     setStartY(e.touches[0].clientY);
@@ -58,6 +58,12 @@ export function MobileBottomNav({
     if (!isDragging) return;
     const currentY = e.touches[0].clientY;
     const diff = startY - currentY;
+
+    // Prevent background scrolling when swiping up on the toolbar
+    if (diff > 10) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
 
     // If swiped up more than 50px, open the menu
     if (diff > 50 && !menuOpen) {
@@ -70,14 +76,52 @@ export function MobileBottomNav({
     setIsDragging(false);
   };
 
+  // Prevent passive event listener warning and ensure touch events are cancelable
+  React.useEffect(() => {
+    const toolbar = toolbarRef.current;
+    if (!toolbar) return;
+
+    const preventScroll = (e: TouchEvent) => {
+      const touch = e.touches[0];
+      const startY = touch.clientY;
+
+      const handleMove = (moveEvent: TouchEvent) => {
+        const moveY = moveEvent.touches[0].clientY;
+        const diff = startY - moveY;
+
+        // Prevent scroll if swiping up
+        if (diff > 0) {
+          moveEvent.preventDefault();
+        }
+      };
+
+      toolbar.addEventListener("touchmove", handleMove, { passive: false });
+
+      const cleanup = () => {
+        toolbar.removeEventListener("touchmove", handleMove);
+      };
+
+      toolbar.addEventListener("touchend", cleanup, { once: true });
+      toolbar.addEventListener("touchcancel", cleanup, { once: true });
+    };
+
+    toolbar.addEventListener("touchstart", preventScroll, { passive: true });
+
+    return () => {
+      toolbar.removeEventListener("touchstart", preventScroll);
+    };
+  }, []);
+
   return (
     <>
       {/* Fixed Bottom Navigation Bar */}
       <div
-        className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-lg z-40 md:hidden"
+        ref={toolbarRef}
+        className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-lg z-40 md:hidden touch-none"
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
+        style={{ touchAction: "none" }}
       >
         <div className="px-2 py-2">
           {/* Swipe Indicator */}
@@ -86,7 +130,7 @@ export function MobileBottomNav({
           </div>
 
           {/* Single Row Layout */}
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-2">
             {/* Week Navigation Section - Compact */}
             <div className="flex-1 flex justify-center min-w-0 overflow-hidden">
               {weekSelector}
@@ -96,7 +140,7 @@ export function MobileBottomNav({
             <div className="w-px h-7 bg-gray-300" />
 
             {/* Action Buttons */}
-            <div className="flex items-center gap-0.5">
+            <div className="flex items-center gap-1">
               <Button
                 size="sm"
                 variant="ghost"
@@ -114,15 +158,6 @@ export function MobileBottomNav({
                 title="Teilen"
               >
                 <Share2 className="h-4 w-4 text-gray-600" />
-              </Button>
-              <Button
-                size="sm"
-                variant="ghost"
-                onClick={() => setMenuOpen(true)}
-                className="h-9 w-9 p-0 rounded-lg hover:bg-gray-100 hover:text-gray-700 active:bg-gray-200"
-                title="Mehr Optionen"
-              >
-                <ChevronUp className="h-4 w-4 text-gray-600" />
               </Button>
             </div>
           </div>
