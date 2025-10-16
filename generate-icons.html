@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PWA Icon Generator</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+        }
+        .input-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #333;
+        }
+        input[type="text"], input[type="color"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        input[type="color"] {
+            width: 100px;
+            height: 45px;
+            cursor: pointer;
+        }
+        button {
+            background: #646cff;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-right: 10px;
+            margin-top: 10px;
+        }
+        button:hover {
+            background: #535bf2;
+        }
+        .preview {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 4px;
+        }
+        .icon-preview {
+            display: inline-block;
+            margin: 10px;
+            text-align: center;
+        }
+        .icon-preview canvas {
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            display: block;
+            margin-bottom: 8px;
+        }
+        .icon-label {
+            font-size: 12px;
+            color: #666;
+        }
+        .instructions {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 20px;
+            border-left: 4px solid #2196f3;
+        }
+        .instructions h3 {
+            margin-top: 0;
+            color: #1976d2;
+        }
+        .instructions ol {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+        .instructions li {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📱 PWA Icon Generator</h</h1>1>
+        <p class="subtitle">Generate placeholder icons for your Weekly Planner PWA</p>
+
+        <div class="input-group">
+            <label for="appName">App Name (1-2 letters for icon)</label>
+            <input type="text" id="appName" value="W" maxlength="2" placeholder="Enter 1-2 characters">
+        </div>
+
+        <div class="input-group">
+            <label for="bgColor">Background Color</label>
+            <input type="color" id="bgColor" value="#646cff">
+        </div>
+
+        <div class="input-group">
+            <label for="textColor">Text Color</label>
+            <input type="color" id="textColor" value="#ffffff">
+        </div>
+
+        <button onclick="generateIcons()">Generate Icons</button>
+        <button onclick="downloadAll()">Download All</button>
+
+        <div class="preview" id="preview" style="display: none;">
+            <h3>Preview:</h3>
+            <div class="icon-preview">
+                <canvas id="icon192" width="192" height="192"></canvas>
+                <div class="icon-label">192x192</div>
+            </div>
+            <div class="icon-preview">
+                <canvas id="icon512" width="512" height="512"></canvas>
+                <div class="icon-label">512x512</div>
+            </div>
+            <div class="icon-preview">
+                <canvas id="iconApple" width="180" height="180"></canvas>
+                <div class="icon-label">180x180 (Apple)</div>
+            </div>
+        </div>
+
+        <div class="instructions">
+            <h3>How to Use:</h3>
+            <ol>
+                <li>Customize the icon text (1-2 letters) and colors above</li>
+                <li>Click "Generate Icons" to preview</li>
+                <li>Click "Download All" to save the icons</li>
+                <li>Move the downloaded PNG files to your <code>public</code> folder</li>
+                <li>Replace these placeholder icons with professional designs later</li>
+            </ol>
+            <p><strong>Note:</strong> These are simple placeholder icons. For production, use a professional icon design tool or hire a designer.</p>
+        </div>
+    </div>
+
+    <script>
+        function drawIcon(canvas, size, text, bgColor, textColor) {
+            const ctx = canvas.getContext('2d');
+
+            // Clear canvas
+            ctx.clearRect(0, 0, size, size);
+
+            // Draw background with rounded corners
+            ctx.fillStyle = bgColor;
+            const radius = size * 0.1;
+            ctx.beginPath();
+            ctx.moveTo(radius, 0);
+            ctx.lineTo(size - radius, 0);
+            ctx.quadraticCurveTo(size, 0, size, radius);
+            ctx.lineTo(size, size - radius);
+            ctx.quadraticCurveTo(size, size, size - radius, size);
+            ctx.lineTo(radius, size);
+            ctx.quadraticCurveTo(0, size, 0, size - radius);
+            ctx.lineTo(0, radius);
+            ctx.quadraticCurveTo(0, 0, radius, 0);
+            ctx.closePath();
+            ctx.fill();
+
+            // Draw text
+            ctx.fillStyle = textColor;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.font = `bold ${size * 0.5}px -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif`;
+            ctx.fillText(text.toUpperCase(), size / 2, size / 2);
+        }
+
+        function generateIcons() {
+            const appName = document.getElementById('appName').value.substring(0, 2) || 'W';
+            const bgColor = document.getElementById('bgColor').value;
+            const textColor = document.getElementById('textColor').value;
+
+            drawIcon(document.getElementById('icon192'), 192, appName, bgColor, textColor);
+            drawIcon(document.getElementById('icon512'), 512, appName, bgColor, textColor);
+            drawIcon(document.getElementById('iconApple'), 180, appName, bgColor, textColor);
+
+            document.getElementById('preview').style.display = 'block';
+        }
+
+        function downloadCanvas(canvas, filename) {
+            const link = document.createElement('a');
+            link.download = filename;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+
+        function downloadAll() {
+            const canvas192 = document.getElementById('icon192');
+            const canvas512 = document.getElementById('icon512');
+            const canvasApple = document.getElementById('iconApple');
+
+            if (canvas192.width === 0) {
+                alert('Please generate icons first!');
+                return;
+            }
+
+            setTimeout(() => downloadCanvas(canvas192, 'pwa-192x192.png'), 100);
+            setTimeout(() => downloadCanvas(canvas512, 'pwa-512x512.png'), 200);
+            setTimeout(() => downloadCanvas(canvasApple, 'apple-touch-icon.png'), 300);
+
+            alert('Icons downloaded! Move them to your public folder.');
+        }
+
+        // Generate default icons on load
+        window.addEventListener('load', generateIcons);
+    </script>
+</body>
+</html>
