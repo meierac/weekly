@@ -1,5 +1,7 @@
 # Weekly Planner 📅
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 A beautiful, responsive weekly planner PWA (Progressive Web App) built with React, TypeScript, and Vite. Organize your week with an intuitive interface, export to iCal, and access it anywhere - even offline!
 
 ## ✨ Features
