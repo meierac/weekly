@@ -72,6 +72,13 @@ code {
 
 /* Mobile optimizations for smaller screens like iPhone 13 mini */
 @layer utilities {
+    /* Custom title bar support for PWA */
+    @media (display-mode: standalone) {
+        body {
+            padding-top: 48px; /* Height of custom title bar */
+        }
+    }
+
     /* Ensure mobile bottom nav doesn't overlap content */
     @media (max-width: 768px) {
         body {

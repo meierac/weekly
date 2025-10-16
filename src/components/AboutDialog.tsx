@@ -6,7 +6,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Calendar, Github, Heart, Mail } from "lucide-react";
+import { Github, Heart, Mail } from "lucide-react";
 
 interface AboutDialogProps {
   open: boolean;
@@ -19,9 +19,11 @@ export function AboutDialog({ open, onOpenChange }: AboutDialogProps) {
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
           <div className="flex items-center gap-3 mb-2">
-            <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-blue-700 rounded-xl flex items-center justify-center shadow-lg">
-              <Calendar className="h-6 w-6 text-white" />
-            </div>
+            <img
+              src="/weekly/favicon.svg"
+              alt="Weekly Planner Logo"
+              className="w-12 h-12"
+            />
             <div>
               <DialogTitle className="text-xl font-semibold">
                 Wöchentliche Agenda

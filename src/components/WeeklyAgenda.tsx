@@ -19,6 +19,7 @@ import { AboutDialog } from "@/components/AboutDialog";
 import { ShareDialog } from "@/components/ShareDialog";
 import { MobileBottomNav } from "@/components/MobileBottomNav";
 import { DaySelectorSheet } from "@/components/DaySelectorSheet";
+import { CustomTitleBar } from "@/components/CustomTitleBar";
 import {
   Dialog,
   DialogContent,
@@ -447,6 +448,9 @@ export function WeeklyAgenda() {
       onDragEnd={handleDragEnd}
     >
       <div className="min-h-screen bg-gray-50 pb-24 md:pb-0">
+        {/* Custom Window Title Bar for Windows PWA */}
+        <CustomTitleBar title="Wochenplaner" />
+
         {/* Desktop Navigation Bar - Apple Style */}
         <div
           className={`hidden md:block bg-white/95 backdrop-blur-md border-b border-gray-200/80 sticky top-0 z-40 transition-shadow duration-300 ${toolbarScrolled ? "shadow-md" : "shadow-sm"}`}
@@ -455,9 +459,11 @@ export function WeeklyAgenda() {
             <div className="flex items-center justify-between gap-4">
               {/* Left: App Title */}
               <div className="flex items-center space-x-3 min-w-0">
-                <div className="w-9 h-9 bg-gradient-to-br from-blue-600 to-blue-700 rounded-xl flex items-center justify-center shadow-sm">
-                  <Calendar className="h-5 w-5 text-white" />
-                </div>
+                <img
+                  src="/weekly/favicon.svg"
+                  alt="Weekly Planner Logo"
+                  className="w-9 h-9"
+                />
                 <h1 className="text-xl font-semibold text-gray-900 tracking-tight hidden sm:block">
                   Wochenplaner
                 </h1>
