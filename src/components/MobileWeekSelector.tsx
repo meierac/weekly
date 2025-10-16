@@ -35,7 +35,7 @@ export function MobileWeekSelector({
   };
 
   return (
-    <div className="flex items-center justify-center gap-3 px-3 py-1.5 bg-gray-50 rounded-lg border border-gray-200">
+    <div className="flex items-center justify-center gap-2 px-2 py-1 bg-gray-50 rounded-lg border border-gray-200">
       {/* Year Selector */}
       <div className="flex flex-col items-center gap-0.5">
         <select
@@ -56,7 +56,7 @@ export function MobileWeekSelector({
       </div>
 
       {/* Divider */}
-      <div className="w-px h-8 bg-gray-300" />
+      <div className="w-px h-7 bg-gray-300" />
 
       {/* Week Selector */}
       <div className="flex flex-col items-center gap-0.5">

@@ -80,7 +80,7 @@ code {
 
         /* Add padding to content to account for floating bottom navigation */
         .max-w-7xl {
-            padding-bottom: 100px;
+            padding-bottom: 80px;
         }
     }
 

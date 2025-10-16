@@ -121,9 +121,9 @@ export function MobileBottomNav({
     <>
       {/* Floating Bottom Navigation Bar - iOS 18 Style */}
       <div
-        className="fixed bottom-0 left-0 right-0 z-40 md:hidden pointer-events-none px-3"
+        className="fixed bottom-0 left-0 right-0 z-40 md:hidden pointer-events-none px-2"
         style={{
-          paddingBottom: "calc(1rem + env(safe-area-inset-bottom, 0px))",
+          paddingBottom: "calc(0.5rem + env(safe-area-inset-bottom, 0px))",
         }}
       >
         <div
@@ -134,9 +134,9 @@ export function MobileBottomNav({
           onTouchEnd={handleTouchEnd}
           style={{ touchAction: "none" }}
         >
-          <div className="px-3 py-2.5">
+          <div className="px-2 py-2">
             {/* Swipe Indicator */}
-            <div className="flex justify-center mb-2">
+            <div className="flex justify-center mb-1.5">
               <div className="w-12 h-1 bg-gray-300 rounded-full" />
             </div>
 
