@@ -25,6 +25,7 @@ import {
   validateImageFile,
   type ExportOptions,
 } from "@/lib/export";
+import { loadExportSettings } from "@/lib/export-settings";
 import { ExportPreview } from "@/components/ExportPreview";
 
 interface ExportDialogProps {
@@ -40,18 +41,40 @@ export function ExportDialog({
   agendaElement,
   weekInfo,
 }: ExportDialogProps) {
-  const [format, setFormat] = React.useState<"png" | "jpeg">("png");
-  const [quality, setQuality] = React.useState(90);
+  // Load saved settings
+  const savedSettings = React.useMemo(() => loadExportSettings(), []);
+
+  const [format, setFormat] = React.useState<"png" | "jpeg">(
+    savedSettings.format,
+  );
+  const [quality, setQuality] = React.useState(savedSettings.quality);
   const [filename, setFilename] = React.useState(
     `Wochenplaner-${weekInfo.year}-KW${weekInfo.week}`,
   );
-  const [selectedBackground, setSelectedBackground] =
-    React.useState<string>("");
-  const [customBackground, setCustomBackground] = React.useState<string>("");
-  const [backgroundColor, setBackgroundColor] = React.useState("#ffffff");
-  const [scale, setScale] = React.useState(2);
+  const [selectedBackground, setSelectedBackground] = React.useState<string>(
+    savedSettings.backgroundType === "image"
+      ? savedSettings.selectedBackground
+      : "",
+  );
+  const [customBackground, setCustomBackground] = React.useState<string>(
+    savedSettings.customBackground || "",
+  );
+  const [backgroundColor, setBackgroundColor] = React.useState(
+    savedSettings.backgroundColor,
+  );
+  const [scale, setScale] = React.useState(savedSettings.scale);
   const [isExporting, setIsExporting] = React.useState(false);
   const [showPreview, setShowPreview] = React.useState(true);
+
+  // Set background type based on saved settings
+  React.useEffect(() => {
+    if (open && savedSettings.backgroundType === "color") {
+      setSelectedBackground("none");
+    } else if (open && savedSettings.backgroundType === "none") {
+      setSelectedBackground("");
+      setBackgroundColor("#ffffff");
+    }
+  }, [open, savedSettings.backgroundType]);
 
   const handleFileUpload = async (
     event: React.ChangeEvent<HTMLInputElement>,

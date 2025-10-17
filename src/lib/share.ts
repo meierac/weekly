@@ -1,4 +1,9 @@
-import { createExportCanvas, type ExportOptions } from "./export";
+import {
+  createExportCanvas,
+  type ExportOptions,
+  BACKGROUND_IMAGES,
+} from "./export";
+import { loadExportSettings } from "./export-settings";
 
 export interface ShareOptions {
   format?: "png" | "jpeg";
@@ -96,8 +101,36 @@ export async function shareWeeklyAgenda(
     throw new Error("Web Share API wird nicht unterstützt");
   }
 
+  // Load saved settings and merge with provided options
+  const savedSettings = loadExportSettings();
+
+  // Get background image URL
+  let backgroundImage = options.backgroundImage;
+  if (!backgroundImage && savedSettings.backgroundType === "image") {
+    if (savedSettings.selectedBackground === "custom") {
+      backgroundImage = savedSettings.customBackground;
+    } else if (savedSettings.selectedBackground) {
+      const bg = BACKGROUND_IMAGES.find(
+        (img) => img.id === savedSettings.selectedBackground,
+      );
+      backgroundImage = bg?.url;
+    }
+  }
+
+  const mergedOptions: ShareOptions = {
+    format: options.format || savedSettings.format,
+    quality: options.quality || savedSettings.quality,
+    scale: options.scale || savedSettings.scale,
+    backgroundImage: backgroundImage,
+    backgroundColor:
+      options.backgroundColor ||
+      (savedSettings.backgroundType === "color"
+        ? savedSettings.backgroundColor
+        : undefined),
+  };
+
   try {
-    const blob = await generateImageBlob(element, options);
+    const blob = await generateImageBlob(element, mergedOptions);
     const file = new File([blob], `wochenplan-kw${weekInfo.week}.png`, {
       type: "image/png",
     });
@@ -149,13 +182,35 @@ async function generateImageBlob(
   element: HTMLElement,
   options: ShareOptions = {},
 ): Promise<Blob> {
+  // Load saved settings if no options provided
+  const savedSettings = loadExportSettings();
+
+  // Get background image URL
+  let backgroundImage = options.backgroundImage;
+  if (!backgroundImage && savedSettings.backgroundType === "image") {
+    if (savedSettings.selectedBackground === "custom") {
+      backgroundImage = savedSettings.customBackground;
+    } else if (savedSettings.selectedBackground) {
+      const bg = BACKGROUND_IMAGES.find(
+        (img) => img.id === savedSettings.selectedBackground,
+      );
+      backgroundImage = bg?.url;
+    }
+  }
+
   const exportOptions: ExportOptions = {
-    format: options.format || "png",
-    quality: options.quality ? options.quality / 100 : 0.95,
+    format: options.format || savedSettings.format,
+    quality: options.quality
+      ? options.quality / 100
+      : savedSettings.quality / 100,
     filename: "temp", // Not used for blob generation
-    scale: options.scale || 2,
-    backgroundImage: options.backgroundImage,
-    backgroundColor: options.backgroundColor,
+    scale: options.scale || savedSettings.scale,
+    backgroundImage: backgroundImage,
+    backgroundColor:
+      options.backgroundColor ||
+      (savedSettings.backgroundType === "color"
+        ? savedSettings.backgroundColor
+        : undefined),
   };
 
   const canvas = await createExportCanvas(element, exportOptions);

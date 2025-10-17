@@ -301,11 +301,7 @@ export function WeeklyAgenda() {
     if (!agendaRef.current) return;
 
     try {
-      await shareWeeklyAgenda(agendaRef.current, currentWeekData, {
-        format: "png",
-        quality: 95,
-        scale: 2,
-      });
+      await shareWeeklyAgenda(agendaRef.current, currentWeekData);
     } catch (error) {
       console.error("Error sharing:", error);
       if ((error as Error).message !== "AbortError") {

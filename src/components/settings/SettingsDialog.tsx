@@ -6,7 +6,24 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Info, BookOpen, Edit, Trash2, Plus } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Info,
+  BookOpen,
+  Edit,
+  Trash2,
+  Plus,
+  Download,
+  Upload,
+} from "lucide-react";
 import { ConfirmDialog } from "@/components/ConfirmDialog";
 import { TaskTemplateDialog } from "@/components/TaskTemplateDialog";
 import type { TaskTemplate } from "@/lib/storage";
@@ -16,11 +33,21 @@ import {
   updateTaskTemplate,
   deleteTaskTemplate,
 } from "@/lib/storage";
+import {
+  loadExportSettings,
+  saveExportSettings,
+  type ExportSettings,
+} from "@/lib/export-settings";
+import {
+  BACKGROUND_IMAGES,
+  loadImageAsBase64,
+  validateImageFile,
+} from "@/lib/export";
 
 interface SettingsDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  initialTab?: "about" | "templates";
+  initialTab?: "about" | "templates" | "export";
 }
 
 export function SettingsDialog({
@@ -28,9 +55,9 @@ export function SettingsDialog({
   onOpenChange,
   initialTab = "about",
 }: SettingsDialogProps) {
-  const [activeTab, setActiveTab] = React.useState<"about" | "templates">(
-    initialTab,
-  );
+  const [activeTab, setActiveTab] = React.useState<
+    "about" | "templates" | "export"
+  >(initialTab);
   const [templates, setTemplates] = React.useState<TaskTemplate[]>([]);
   const [templateDialogOpen, setTemplateDialogOpen] = React.useState(false);
   const [editingTemplate, setEditingTemplate] = React.useState<
@@ -40,11 +67,14 @@ export function SettingsDialog({
   const [templateToDelete, setTemplateToDelete] = React.useState<string | null>(
     null,
   );
+  const [exportSettings, setExportSettings] =
+    React.useState<ExportSettings>(loadExportSettings());
 
   React.useEffect(() => {
     if (open) {
       setActiveTab(initialTab);
       loadTemplatesData();
+      setExportSettings(loadExportSettings());
     }
   }, [open, initialTab]);
 
@@ -105,6 +135,33 @@ export function SettingsDialog({
     return groups;
   }, [templates]);
 
+  const handleExportSettingChange = (key: keyof ExportSettings, value: any) => {
+    const newSettings = { ...exportSettings, [key]: value };
+    setExportSettings(newSettings);
+    saveExportSettings(newSettings);
+  };
+
+  const handleCustomBackgroundUpload = async (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    if (!validateImageFile(file)) {
+      alert("Ungültiges Dateiformat oder Datei zu groß (max. 5MB)");
+      return;
+    }
+
+    try {
+      const base64 = await loadImageAsBase64(file);
+      handleExportSettingChange("customBackground", base64);
+      handleExportSettingChange("selectedBackground", "custom");
+    } catch (error) {
+      console.error("Error loading image:", error);
+      alert("Fehler beim Laden des Bildes");
+    }
+  };
+
   return (
     <>
       <Dialog open={open} onOpenChange={onOpenChange}>
@@ -132,6 +189,15 @@ export function SettingsDialog({
             >
               <BookOpen className="h-4 w-4" />
               Vorlagen
+            </Button>
+            <Button
+              variant={activeTab === "export" ? "default" : "ghost"}
+              size="sm"
+              onClick={() => setActiveTab("export")}
+              className="gap-2"
+            >
+              <Download className="h-4 w-4" />
+              Export
             </Button>
           </div>
 
@@ -287,6 +353,183 @@ export function SettingsDialog({
                         </div>
                       ),
                     )}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {activeTab === "export" && (
+              <div className="space-y-4 py-4">
+                <p className="text-sm text-gray-600">
+                  Diese Einstellungen werden beim Export und Teilen verwendet.
+                </p>
+
+                {/* Format */}
+                <div className="space-y-2">
+                  <Label>Dateiformat</Label>
+                  <Select
+                    value={exportSettings.format}
+                    onValueChange={(value: "png" | "jpeg") =>
+                      handleExportSettingChange("format", value)
+                    }
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="png">PNG (verlustfrei)</SelectItem>
+                      <SelectItem value="jpeg">JPEG (komprimiert)</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {/* Quality (only for JPEG) */}
+                {exportSettings.format === "jpeg" && (
+                  <div className="space-y-2">
+                    <Label>Qualität: {exportSettings.quality}%</Label>
+                    <Input
+                      type="range"
+                      min="50"
+                      max="100"
+                      value={exportSettings.quality}
+                      onChange={(e) =>
+                        handleExportSettingChange(
+                          "quality",
+                          parseInt(e.target.value),
+                        )
+                      }
+                    />
+                  </div>
+                )}
+
+                {/* Scale */}
+                <div className="space-y-2">
+                  <Label>Auflösung (Skalierung)</Label>
+                  <Select
+                    value={exportSettings.scale.toString()}
+                    onValueChange={(value) =>
+                      handleExportSettingChange("scale", parseInt(value))
+                    }
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="1">1x (Standard)</SelectItem>
+                      <SelectItem value="2">2x (Empfohlen)</SelectItem>
+                      <SelectItem value="3">3x (Hoch)</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {/* Background Type */}
+                <div className="space-y-2">
+                  <Label>Hintergrund</Label>
+                  <Select
+                    value={exportSettings.backgroundType}
+                    onValueChange={(value: "image" | "color" | "none") =>
+                      handleExportSettingChange("backgroundType", value)
+                    }
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="none">Transparent</SelectItem>
+                      <SelectItem value="color">Einfarbig</SelectItem>
+                      <SelectItem value="image">Bild/Verlauf</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {/* Background Color */}
+                {exportSettings.backgroundType === "color" && (
+                  <div className="space-y-2">
+                    <Label>Hintergrundfarbe</Label>
+                    <div className="flex gap-2">
+                      <Input
+                        type="color"
+                        value={exportSettings.backgroundColor}
+                        onChange={(e) =>
+                          handleExportSettingChange(
+                            "backgroundColor",
+                            e.target.value,
+                          )
+                        }
+                        className="w-20 h-10"
+                      />
+                      <Input
+                        type="text"
+                        value={exportSettings.backgroundColor}
+                        onChange={(e) =>
+                          handleExportSettingChange(
+                            "backgroundColor",
+                            e.target.value,
+                          )
+                        }
+                        className="flex-1"
+                        placeholder="#ffffff"
+                      />
+                    </div>
+                  </div>
+                )}
+
+                {/* Background Image */}
+                {exportSettings.backgroundType === "image" && (
+                  <div className="space-y-3">
+                    <Label>Hintergrundbild</Label>
+
+                    {/* Predefined backgrounds */}
+                    <div className="grid grid-cols-3 gap-2">
+                      {BACKGROUND_IMAGES.slice(0, 6).map((bg) => (
+                        <button
+                          key={bg.id}
+                          onClick={() =>
+                            handleExportSettingChange(
+                              "selectedBackground",
+                              bg.id,
+                            )
+                          }
+                          className={`h-16 rounded-lg border-2 transition-all ${
+                            exportSettings.selectedBackground === bg.id
+                              ? "border-blue-500 ring-2 ring-blue-200"
+                              : "border-gray-200 hover:border-gray-300"
+                          }`}
+                          style={{
+                            background: bg.preview,
+                          }}
+                          title={bg.name}
+                        />
+                      ))}
+                    </div>
+
+                    {/* Custom upload */}
+                    <div>
+                      <Label
+                        htmlFor="custom-bg-upload"
+                        className="cursor-pointer"
+                      >
+                        <div className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+                          <Upload className="h-4 w-4" />
+                          <span className="text-sm">
+                            Eigenes Bild hochladen
+                          </span>
+                        </div>
+                      </Label>
+                      <Input
+                        id="custom-bg-upload"
+                        type="file"
+                        accept="image/*"
+                        onChange={handleCustomBackgroundUpload}
+                        className="hidden"
+                      />
+                      {exportSettings.selectedBackground === "custom" &&
+                        exportSettings.customBackground && (
+                          <div className="mt-2 text-xs text-gray-600">
+                            ✓ Eigenes Bild geladen
+                          </div>
+                        )}
+                    </div>
                   </div>
                 )}
               </div>
