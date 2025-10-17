@@ -78,9 +78,7 @@ export function TaskTemplateDialog({
   const [category, setCategory] = React.useState(
     template?.category || "Privat",
   );
-  const [color, setColor] = React.useState(
-    template?.color || COLORS[0].value,
-  );
+  const [color, setColor] = React.useState(template?.color || COLORS[0].value);
 
   React.useEffect(() => {
     if (template) {
@@ -116,12 +114,12 @@ export function TaskTemplateDialog({
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>
-            {template ? "Vorlage bearbeiten" : "Neue Aufgaben-Vorlage"}
+            {template ? "Vorlage bearbeiten" : "Neue Aktivitäten-Vorlage"}
           </DialogTitle>
           <DialogDescription>
             {template
-              ? "Bearbeiten Sie Ihre Aufgaben-Vorlage."
-              : "Erstellen Sie eine wiederverwendbare Aufgaben-Vorlage."}
+              ? "Bearbeiten Sie Ihre Aktivitäten-Vorlage."
+              : "Erstellen Sie eine wiederverwendbare Aktivitäten-Vorlage."}
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
@@ -162,7 +160,10 @@ export function TaskTemplateDialog({
               </SelectTrigger>
               <SelectContent>
                 {DURATIONS.map((duration) => (
-                  <SelectItem key={duration.value} value={duration.value.toString()}>
+                  <SelectItem
+                    key={duration.value}
+                    value={duration.value.toString()}
+                  >
                     {duration.label}
                   </SelectItem>
                 ))}

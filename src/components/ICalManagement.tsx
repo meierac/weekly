@@ -132,7 +132,7 @@ export function ICalManagement({
     try {
       const taskCount = await syncICalSource(sourceId);
       setSuccess(
-        `"${sourceName}" erfolgreich synchronisiert! ${taskCount} Aufgaben importiert.`,
+        `"${sourceName}" erfolgreich synchronisiert! ${taskCount} Aktivitäten importiert.`,
       );
       loadSources();
       onTasksUpdated();
@@ -173,7 +173,7 @@ export function ICalManagement({
               iCal-Kalender verwalten
             </DialogTitle>
             <DialogDescription>
-              Importieren Sie Aufgaben aus iCal-Links (z.B. Google Calendar,
+              Importieren Sie Aktivitäten aus iCal-Links (z.B. Google Calendar,
               Outlook)
             </DialogDescription>
           </DialogHeader>
@@ -280,7 +280,7 @@ export function ICalManagement({
                           </p>
                           <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground">
                             <span>
-                              Aufgaben:{" "}
+                              Aktivitäten:{" "}
                               <strong>{getTaskCount(source.id)}</strong>
                             </span>
                             {source.lastSynced && (
@@ -354,7 +354,7 @@ export function ICalManagement({
                   und setzt lokale Bearbeitungen zurück
                 </li>
                 <li>
-                  • <strong>Importierte Aufgaben:</strong> Können bearbeitet
+                  • <strong>Importierte Aktivitäten:</strong> Können bearbeitet
                   werden, aber Sync setzt Änderungen zurück
                 </li>
                 <li>
@@ -381,7 +381,7 @@ export function ICalManagement({
         title="iCal-Quelle löschen"
         description={
           sourceToDelete
-            ? `Möchten Sie die iCal-Quelle "${sourceToDelete.name}" wirklich löschen? Alle importierten Aufgaben aus dieser Quelle werden ebenfalls gelöscht.`
+            ? `Möchten Sie die iCal-Quelle "${sourceToDelete.name}" wirklich löschen? Alle importierten Aktivitäten aus dieser Quelle werden ebenfalls gelöscht.`
             : ""
         }
         confirmText="Löschen"

@@ -77,12 +77,12 @@ export function TaskDialog({
       <ResponsiveDialogContent className="sm:max-w-[425px]">
         <ResponsiveDialogHeader>
           <ResponsiveDialogTitle>
-            {task ? "Aufgabe bearbeiten" : "Neue Aufgabe"}
+            {task ? "Aktivität bearbeiten" : "Neue Aktivität"}
           </ResponsiveDialogTitle>
           <ResponsiveDialogDescription>
             {task
-              ? "Bearbeiten Sie Ihre Aufgabe."
-              : "Fügen Sie eine neue Aufgabe hinzu."}
+              ? "Bearbeiten Sie Ihre Aktivität."
+              : "Fügen Sie eine neue Aktivität hinzu."}
           </ResponsiveDialogDescription>
         </ResponsiveDialogHeader>
         <div className="grid gap-4 py-4">

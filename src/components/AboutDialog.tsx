@@ -43,7 +43,7 @@ export function AboutDialog({ open, onOpenChange }: AboutDialogProps) {
             </h3>
             <p className="text-sm text-gray-600 leading-relaxed">
               Ein moderner Wochenplaner mit Apple-Style Design. Organisieren Sie
-              Ihre Aufgaben, erstellen Sie Vorlagen und importieren Sie Ihre
+              Ihre Aktivitäten, erstellen Sie Vorlagen und importieren Sie Ihre
               Kalender – alles an einem Ort.
             </p>
           </div>
@@ -56,11 +56,11 @@ export function AboutDialog({ open, onOpenChange }: AboutDialogProps) {
             <ul className="space-y-2 text-sm text-gray-600">
               <li className="flex items-start gap-2">
                 <span className="text-blue-600 mt-0.5">✓</span>
-                <span>Wöchentliche Aufgabenverwaltung mit Drag & Drop</span>
+                <span>Wöchentliche Aktivitätenverwaltung mit Drag & Drop</span>
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-blue-600 mt-0.5">✓</span>
-                <span>Wiederverwendbare Aufgaben-Vorlagen</span>
+                <span>Wiederverwendbare Aktivitäten-Vorlagen</span>
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-blue-600 mt-0.5">✓</span>

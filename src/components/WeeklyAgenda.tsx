@@ -12,7 +12,7 @@ import {
 import { WeekSelector } from "@/components/WeekSelector";
 import { TaskDialog } from "@/components/TaskDialog";
 import { DroppableDay } from "@/components/DroppableDay";
-import { TaskTemplatesSidebar } from "@/components/TaskTemplatesSidebar";
+import { TaskTemplatesSidebar } from "@/components/ActivityTemplatesSidebar";
 import { ICalManagement } from "@/components/ICalManagement";
 import { ConfirmDialog } from "@/components/ConfirmDialog";
 import { AboutDialog } from "@/components/AboutDialog";
@@ -205,13 +205,13 @@ export function WeeklyAgenda() {
         alert(
           `Synchronisierung abgeschlossen!\n\n` +
             `Erfolgreich: ${results.successCount}/${results.totalSources}\n` +
-            `Insgesamt ${results.totalTasks} Aufgaben importiert.\n\n` +
+            `Insgesamt ${results.totalTasks} Aktivitäten importiert.\n\n` +
             `Fehler bei: ${results.failedSources.join(", ")}`,
         );
       } else {
         alert(
           `Alle ${results.totalSources} Quelle(n) erfolgreich synchronisiert!\n` +
-            `${results.totalTasks} Aufgaben importiert.`,
+            `${results.totalTasks} Aktivitäten importiert.`,
         );
       }
     } catch (error) {
@@ -483,7 +483,7 @@ export function WeeklyAgenda() {
                       variant="ghost"
                       size="sm"
                       className="h-9 px-3 text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-all"
-                      title="Neue Aufgabe erstellen"
+                      title="Neue Aktivität erstellen"
                     >
                       <Plus className="h-4 w-4" />
                       <span className="ml-2 hidden xl:inline">Neu</span>
@@ -491,7 +491,7 @@ export function WeeklyAgenda() {
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-56">
                     <DropdownMenuLabel>
-                      Aufgabe hinzufügen zu...
+                      Aktivität hinzufügen zu...
                     </DropdownMenuLabel>
                     <DropdownMenuSeparator />
                     {weekDates.map((date) => {
@@ -675,9 +675,9 @@ export function WeeklyAgenda() {
                     Willkommen bei Ihrem Wochenplaner!
                   </h3>
                   <p className="text-gray-600 max-w-lg mx-auto mb-8 text-base leading-relaxed">
-                    Erstellen Sie Aufgaben-Vorlagen oder fügen Sie direkt
-                    Aufgaben zu Ihren Tagen hinzu. Vorlagen können Sie einfach
-                    per Drag & Drop auf die gewünschten Tage ziehen.
+                    Erstellen Sie Aktivitäten-Vorlagen oder fügen Sie direkt
+                    Aktivitäten zu Ihren Tagen hinzu. Vorlagen können Sie
+                    einfach per Drag & Drop auf die gewünschten Tage ziehen.
                   </p>
                   <div className="flex items-center justify-center gap-3 flex-wrap">
                     <Button
@@ -687,7 +687,7 @@ export function WeeklyAgenda() {
                       className="h-11 px-6 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg shadow-sm hover:shadow-md transition-all hover:-translate-y-0.5"
                     >
                       <Plus className="h-4 w-4 mr-2" />
-                      Erste Aufgabe hinzufügen
+                      Erste Aktivität hinzufügen
                     </Button>
                     <Button
                       variant="outline"
@@ -795,7 +795,7 @@ export function WeeklyAgenda() {
                   <div className="flex items-center gap-2 mb-2">
                     <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
                     <span className="text-xs font-medium text-muted-foreground">
-                      Aufgabe verschieben
+                      Aktivität verschieben
                     </span>
                   </div>
                   <div className="text-xs font-medium text-primary mb-1">
@@ -815,8 +815,8 @@ export function WeeklyAgenda() {
           open={deleteConfirmOpen}
           onOpenChange={setDeleteConfirmOpen}
           onConfirm={confirmDeleteTask}
-          title="Aufgabe löschen"
-          description="Sind Sie sicher, dass Sie diese Aufgabe löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden."
+          title="Aktivität löschen"
+          description="Sind Sie sicher, dass Sie diese Aktivität löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden."
           confirmText="Löschen"
           cancelText="Abbrechen"
           variant="danger"
@@ -828,7 +828,7 @@ export function WeeklyAgenda() {
           onOpenChange={setSyncConfirmOpen}
           onConfirm={confirmSyncAll}
           title="Alle Quellen synchronisieren"
-          description="Möchten Sie alle iCal-Quellen synchronisieren? Alle lokalen Änderungen an importierten Aufgaben werden zurückgesetzt."
+          description="Möchten Sie alle iCal-Quellen synchronisieren? Alle lokalen Änderungen an importierten Aktivitäten werden zurückgesetzt."
           confirmText="Synchronisieren"
           cancelText="Abbrechen"
           variant="warning"

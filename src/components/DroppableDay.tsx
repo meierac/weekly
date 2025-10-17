@@ -181,7 +181,7 @@ export function DroppableDay({
             `}
             />
             <p className="text-gray-400 text-xs md:text-xs">
-              {weekend ? "Frei" : "Keine Aufgaben"}
+              {weekend ? "Frei" : "Keine Aktivitäten"}
             </p>
           </div>
         )}
@@ -213,7 +213,7 @@ export function DroppableDay({
                 `}
                 >
                   {draggedTask
-                    ? "Neue Zeit für die Aufgabe wählen:"
+                    ? "Neue Zeit für die Aktivität wählen:"
                     : "Vorlage zu einer bestimmten Zeit hinzufügen:"}
                 </span>
               </div>

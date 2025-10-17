@@ -117,7 +117,7 @@ export function TaskTemplatesSidebar({
         <div className="p-4 border-b flex items-center justify-between">
           <div className="flex items-center gap-2">
             <BookOpen className="h-5 w-5" />
-            <h3 className="font-semibold">Aufgaben-Vorlagen</h3>
+            <h3 className="font-semibold">Aktivitäten-Vorlagen</h3>
           </div>
           <div className="flex items-center gap-2">
             <Button onClick={handleAddTemplate} size="sm">
@@ -137,7 +137,7 @@ export function TaskTemplatesSidebar({
               <div className="text-4xl mb-4">📝</div>
               <h4 className="font-medium mb-2">Keine Vorlagen vorhanden</h4>
               <p className="text-sm mb-4">
-                Erstellen Sie wiederverwendbare Aufgaben-Vorlagen
+                Erstellen Sie wiederverwendbare Aktivitäten-Vorlagen
               </p>
               <Button onClick={handleAddTemplate} size="sm">
                 <Plus className="h-4 w-4 mr-1" />
@@ -150,7 +150,7 @@ export function TaskTemplatesSidebar({
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
                 <p className="text-sm text-blue-800">
                   💡 <strong>Tipp:</strong> Ziehen Sie Vorlagen einfach auf
-                  einen Wochentag, um schnell Aufgaben zu erstellen!
+                  einen Wochentag, um schnell Aktivitäten zu erstellen!
                 </p>
               </div>
 

@@ -171,10 +171,10 @@ export function ExportPreview({
       <div className="bg-muted/30 border rounded-lg p-6 text-center">
         <div className="text-2xl mb-2">📋</div>
         <h3 className="font-medium text-muted-foreground mb-2">
-          Keine Aufgaben zum Exportieren
+          Keine Aktivitäten zum Exportieren
         </h3>
         <p className="text-sm text-muted-foreground">
-          Fügen Sie Aufgaben hinzu, um eine Vorschau zu sehen.
+          Fügen Sie Aktivitäten hinzu, um eine Vorschau zu sehen.
         </p>
       </div>
     );

@@ -415,7 +415,7 @@ export function ExportDialog({
                 <p className="text-sm text-muted-foreground">
                   <ImageIcon className="h-4 w-4 inline mr-1" />
                   Das exportierte Bild zeigt "Wochenprogramm" mit Kalenderwoche,
-                  Montag bis Freitag mit Aufgaben, durchscheinenden
+                  Montag bis Freitag mit Aktivitäten, durchscheinenden
                   Hintergründen und passenden Schriftfarben (375px breit).
                 </p>
               </div>

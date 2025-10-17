@@ -144,7 +144,7 @@ export function DraggableTask({ task, onEdit, onDelete }: DraggableTaskProps) {
                 onEdit(task);
               }}
               className="h-7 w-7 p-0 hover:bg-blue-50 hover:text-blue-600 active:bg-blue-100"
-              title="Aufgabe bearbeiten"
+              title="Aktivität bearbeiten"
             >
               <Edit className="h-3.5 w-3.5" />
             </Button>
@@ -157,7 +157,7 @@ export function DraggableTask({ task, onEdit, onDelete }: DraggableTaskProps) {
               }}
               className="h-7 w-7 p-0 hover:bg-red-50 hover:text-red-600 active:bg-red-100"
               title={
-                task.isImported ? "Aus Ansicht entfernen" : "Aufgabe löschen"
+                task.isImported ? "Aus Ansicht entfernen" : "Aktivität löschen"
               }
             >
               <Trash2 className="h-3.5 w-3.5" />
@@ -201,7 +201,7 @@ export function DraggableTask({ task, onEdit, onDelete }: DraggableTaskProps) {
               onEdit(task);
             }}
             className="h-7 w-7 p-0 hover:bg-blue-50 hover:text-blue-600"
-            title="Aufgabe bearbeiten"
+            title="Aktivität bearbeiten"
           >
             <Edit className="h-3.5 w-3.5" />
           </Button>
@@ -215,7 +215,7 @@ export function DraggableTask({ task, onEdit, onDelete }: DraggableTaskProps) {
             }}
             className="h-7 w-7 p-0 hover:bg-red-50 hover:text-red-600"
             title={
-              task.isImported ? "Aus Ansicht entfernen" : "Aufgabe löschen"
+              task.isImported ? "Aus Ansicht entfernen" : "Aktivität löschen"
             }
           >
             <Trash2 className="h-3.5 w-3.5" />
@@ -233,11 +233,11 @@ export function DraggableTask({ task, onEdit, onDelete }: DraggableTaskProps) {
         open={deleteConfirmOpen}
         onOpenChange={setDeleteConfirmOpen}
         onConfirm={() => onDelete(task.id)}
-        title={task.isImported ? "Aus Ansicht entfernen" : "Aufgabe löschen"}
+        title={task.isImported ? "Aus Ansicht entfernen" : "Aktivität löschen"}
         description={
           task.isImported
-            ? "Diese importierte Aufgabe wird aus der lokalen Ansicht entfernt, aber beim nächsten Sync möglicherweise wieder hinzugefügt. Möchten Sie fortfahren?"
-            : "Sind Sie sicher, dass Sie diese Aufgabe löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden."
+            ? "Diese importierte Aktivität wird aus der lokalen Ansicht entfernt, aber beim nächsten Sync möglicherweise wieder hinzugefügt. Möchten Sie fortfahren?"
+            : "Sind Sie sicher, dass Sie diese Aktivität löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden."
         }
         confirmText={task.isImported ? "Entfernen" : "Löschen"}
         cancelText="Abbrechen"

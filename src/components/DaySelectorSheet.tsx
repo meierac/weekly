@@ -52,7 +52,7 @@ export function DaySelectorSheet({
             Tag auswählen
           </SheetTitle>
           <SheetDescription>
-            Wählen Sie einen Tag für die neue Aufgabe
+            Wählen Sie einen Tag für die neue Aktivität
           </SheetDescription>
         </SheetHeader>
 
