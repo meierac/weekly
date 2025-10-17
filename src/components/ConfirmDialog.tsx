@@ -45,8 +45,8 @@ export function ConfirmDialog({
               w-10 h-10 rounded-lg flex items-center justify-center
               ${
                 variant === "danger"
-                  ? "bg-red-100 text-red-600"
-                  : "bg-amber-100 text-amber-600"
+                  ? "bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400"
+                  : "bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400"
               }
             `}
             >
@@ -58,7 +58,7 @@ export function ConfirmDialog({
             </div>
             <DialogTitle className="text-lg font-semibold">{title}</DialogTitle>
           </div>
-          <DialogDescription className="text-sm text-gray-600 leading-relaxed">
+          <DialogDescription className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
             {description}
           </DialogDescription>
         </DialogHeader>
@@ -78,8 +78,8 @@ export function ConfirmDialog({
               flex-1 h-10
               ${
                 variant === "danger"
-                  ? "bg-red-600 hover:bg-red-700 text-white"
-                  : "bg-amber-600 hover:bg-amber-700 text-white"
+                  ? "bg-red-600 hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600 text-white"
+                  : "bg-amber-600 hover:bg-amber-700 dark:bg-amber-500 dark:hover:bg-amber-600 text-white"
               }
             `}
           >

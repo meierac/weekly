@@ -74,10 +74,10 @@ export function DaySelectorSheet({
                 variant={today ? "default" : "outline"}
                 className={`h-16 justify-start px-4 ${
                   today
-                    ? "bg-blue-600 hover:bg-blue-700 text-white"
+                    ? "bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white"
                     : weekend
-                      ? "border-gray-200 hover:border-gray-300"
-                      : "hover:border-blue-300 hover:bg-blue-50"
+                      ? "border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600"
+                      : "hover:border-blue-300 dark:hover:border-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20"
                 }`}
                 onClick={() => handleDaySelect(date)}
               >
@@ -87,8 +87,8 @@ export function DaySelectorSheet({
                       today
                         ? "bg-white/20 text-white"
                         : weekend
-                          ? "bg-gray-100 text-gray-500"
-                          : "bg-blue-50 text-blue-600"
+                          ? "bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400"
+                          : "bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400"
                     }`}
                   >
                     <span className="text-lg font-bold leading-none">
@@ -101,7 +101,7 @@ export function DaySelectorSheet({
                   <div className="flex flex-col items-start">
                     <span className="text-base font-semibold">{dayName}</span>
                     <span
-                      className={`text-sm ${today ? "text-white/80" : "text-gray-500"}`}
+                      className={`text-sm ${today ? "text-white/80" : "text-gray-500 dark:text-gray-400"}`}
                     >
                       {dayDate}
                     </span>

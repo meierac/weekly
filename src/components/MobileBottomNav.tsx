@@ -1,14 +1,6 @@
 import * as React from "react";
 import { Button } from "@/components/ui/button";
-import {
-  Plus,
-  Eye,
-  Share2,
-  Calendar,
-  RefreshCw,
-  Download,
-  Settings,
-} from "lucide-react";
+import { Plus, Eye, Share2, RefreshCw, Download, Settings } from "lucide-react";
 import { MobileWeekSelector } from "@/components/MobileWeekSelector";
 
 interface MobileBottomNavProps {
@@ -20,7 +12,6 @@ interface MobileBottomNavProps {
   onShare: () => void;
   onNativeShare: () => void;
   onSettings: () => void;
-  onIcal: () => void;
   onSyncAll: () => void;
   onExport: () => void;
   isSyncing?: boolean;
@@ -34,7 +25,6 @@ export function MobileBottomNav({
   onPreview,
   onNativeShare,
   onSettings,
-  onIcal,
   onSyncAll,
   onExport,
   isSyncing = false,
@@ -161,7 +151,7 @@ export function MobileBottomNav({
       >
         <div
           ref={toolbarRef}
-          className="bg-white/95 backdrop-blur-xl border border-gray-200 shadow-lg rounded-2xl pointer-events-auto touch-none overflow-hidden transition-all"
+          className="bg-white/80 dark:bg-gray-800/90 backdrop-blur-md border border-gray-200/50 dark:border-gray-700/50 shadow-lg rounded-2xl pointer-events-auto touch-none overflow-hidden transition-all"
           onTouchStart={handleTouchStart}
           onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
@@ -185,11 +175,13 @@ export function MobileBottomNav({
                   size="sm"
                   variant="ghost"
                   onClick={onNativeShare}
-                  className="h-auto px-2 py-1.5 rounded-lg hover:bg-gray-100 hover:text-gray-700 active:bg-gray-200 flex-col gap-0.5"
+                  className="h-auto px-2 py-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-700 dark:hover:text-gray-200 active:bg-gray-200 dark:active:bg-gray-600 flex-col gap-0.5"
                   title="Teilen"
                 >
-                  <Share2 className="h-4 w-4 text-gray-600" />
-                  <span className="text-[10px] text-gray-600">Teilen</span>
+                  <Share2 className="h-4 w-4 text-gray-600 dark:text-gray-400" />
+                  <span className="text-[10px] text-gray-600 dark:text-gray-400">
+                    Teilen
+                  </span>
                 </Button>
               </div>
 
@@ -208,11 +200,13 @@ export function MobileBottomNav({
                   size="sm"
                   variant="ghost"
                   onClick={onAddTask}
-                  className="h-auto px-2 py-1.5 rounded-lg hover:bg-blue-50 hover:text-blue-600 active:bg-blue-100 flex-col gap-0.5"
+                  className="h-auto px-2 py-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-700 dark:hover:text-gray-200 active:bg-gray-200 dark:active:bg-gray-600 flex-col gap-0.5"
                   title="Aktivität hinzufügen"
                 >
-                  <Plus className="h-4 w-4 text-blue-600" />
-                  <span className="text-[10px] text-blue-600">Aktivität</span>
+                  <Plus className="h-4 w-4 text-gray-600 dark:text-gray-400" />
+                  <span className="text-[10px] text-gray-600 dark:text-gray-400">
+                    Aktivität
+                  </span>
                 </Button>
               </div>
             </div>
@@ -240,8 +234,8 @@ export function MobileBottomNav({
                     setIsExpanded(false);
                   }}
                 >
-                  <Eye className="h-4 w-4" />
-                  <span className="text-xs">Vorschau</span>
+                  <Eye className="h-4 w-4 dark:text-gray-300" />
+                  <span className="text-xs dark:text-gray-300">Vorschau</span>
                 </Button>
 
                 {/* Export */}
@@ -253,8 +247,8 @@ export function MobileBottomNav({
                     setIsExpanded(false);
                   }}
                 >
-                  <Download className="h-4 w-4" />
-                  <span className="text-xs">Export</span>
+                  <Download className="h-4 w-4 dark:text-gray-300" />
+                  <span className="text-xs dark:text-gray-300">Export</span>
                 </Button>
 
                 {/* Settings */}
@@ -266,21 +260,10 @@ export function MobileBottomNav({
                     setIsExpanded(false);
                   }}
                 >
-                  <Settings className="h-4 w-4" />
-                  <span className="text-xs">Einstellungen</span>
-                </Button>
-
-                {/* iCal */}
-                <Button
-                  variant="outline"
-                  className="h-16 flex-col gap-1.5"
-                  onClick={() => {
-                    onIcal();
-                    setIsExpanded(false);
-                  }}
-                >
-                  <Calendar className="h-4 w-4" />
-                  <span className="text-xs">iCal</span>
+                  <Settings className="h-4 w-4 dark:text-gray-300" />
+                  <span className="text-xs dark:text-gray-300">
+                    Einstellungen
+                  </span>
                 </Button>
 
                 {/* Sync All */}
@@ -294,9 +277,9 @@ export function MobileBottomNav({
                   disabled={isSyncing}
                 >
                   <RefreshCw
-                    className={`h-4 w-4 ${isSyncing ? "animate-spin" : ""}`}
+                    className={`h-4 w-4 dark:text-gray-300 ${isSyncing ? "animate-spin" : ""}`}
                   />
-                  <span className="text-xs">Sync</span>
+                  <span className="text-xs dark:text-gray-300">Sync</span>
                 </Button>
               </div>
             </div>

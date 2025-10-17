@@ -80,11 +80,11 @@ export function DraggableTask({ task, onEdit, onDelete }: DraggableTaskProps) {
       data-description={task.description}
       data-is-imported={task.isImported}
       className={`
-        group relative bg-white rounded-lg md:rounded-md border transition-all duration-200
+        group relative bg-white dark:bg-gray-800 rounded-lg border transition-all duration-200
         ${
           task.isImported
-            ? "border-blue-200 hover:border-blue-300"
-            : "border-gray-200 hover:border-gray-300"
+            ? "border-blue-200 dark:border-blue-700 hover:border-blue-300 dark:hover:border-blue-600"
+            : "border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600"
         }
         ${isDragging ? "shadow-lg rotate-1 scale-105" : "shadow-sm"}
         cursor-grab active:cursor-grabbing
@@ -93,7 +93,7 @@ export function DraggableTask({ task, onEdit, onDelete }: DraggableTaskProps) {
       {/* Colored accent bar for imported tasks */}
       {task.isImported && sourceInfo?.color && (
         <div
-          className="absolute left-0 top-0 bottom-0 w-0.5 rounded-l-md"
+          className="absolute left-1 top-1 bottom-1 w-1 rounded-md"
           style={{ backgroundColor: sourceInfo.color }}
         />
       )}
@@ -108,7 +108,7 @@ export function DraggableTask({ task, onEdit, onDelete }: DraggableTaskProps) {
           ${task.isImported ? "left-2.5" : "left-2"}
         `}
       >
-        <GripVertical className="h-3.5 w-3.5 text-gray-400" />
+        <GripVertical className="h-3.5 w-3.5 text-gray-400 dark:text-gray-500" />
       </div>
 
       {/* Main content */}
@@ -119,9 +119,9 @@ export function DraggableTask({ task, onEdit, onDelete }: DraggableTaskProps) {
         <div className="flex items-center justify-between mb-1.5">
           <div className="flex items-center space-x-2">
             <div className="flex items-center space-x-1.5">
-              <Clock className="h-4 w-4 md:h-3.5 md:w-3.5 text-gray-500" />
+              <Clock className="h-4 w-4 md:h-3.5 md:w-3.5 text-gray-500 dark:text-gray-400" />
               <span
-                className="text-xs md:text-xs font-semibold text-gray-900"
+                className="text-xs md:text-xs font-semibold text-gray-900 dark:text-gray-100"
                 data-task-time
               >
                 {formatTimeRange(task.startTime, task.endTime)}
@@ -129,7 +129,7 @@ export function DraggableTask({ task, onEdit, onDelete }: DraggableTaskProps) {
             </div>
             {task.isImported && (
               <div title="iCal Import">
-                <Calendar className="h-4 w-4 md:h-3.5 md:w-3.5 text-blue-600" />
+                <Calendar className="h-4 w-4 md:h-3.5 md:w-3.5 text-blue-600 dark:text-blue-400" />
               </div>
             )}
           </div>
@@ -143,7 +143,7 @@ export function DraggableTask({ task, onEdit, onDelete }: DraggableTaskProps) {
                 e.stopPropagation();
                 onEdit(task);
               }}
-              className="h-7 w-7 p-0 hover:bg-blue-50 hover:text-blue-600 active:bg-blue-100"
+              className="h-7 w-7 p-0 hover:bg-blue-50 dark:hover:bg-blue-900/30 hover:text-blue-600 dark:hover:text-blue-400 active:bg-blue-100 dark:active:bg-blue-900/50"
               title="Aktivität bearbeiten"
             >
               <Edit className="h-3.5 w-3.5" />
@@ -155,7 +155,7 @@ export function DraggableTask({ task, onEdit, onDelete }: DraggableTaskProps) {
                 e.stopPropagation();
                 setDeleteConfirmOpen(true);
               }}
-              className="h-7 w-7 p-0 hover:bg-red-50 hover:text-red-600 active:bg-red-100"
+              className="h-7 w-7 p-0 hover:bg-red-50 dark:hover:bg-red-900/30 hover:text-red-600 dark:hover:text-red-400 active:bg-red-100 dark:active:bg-red-900/50"
               title={
                 task.isImported ? "Aus Ansicht entfernen" : "Aktivität löschen"
               }
@@ -168,13 +168,13 @@ export function DraggableTask({ task, onEdit, onDelete }: DraggableTaskProps) {
         {/* Task description */}
         <div className="mb-1.5">
           <h4
-            className="text-sm md:text-sm font-medium text-gray-900 leading-snug"
+            className="text-sm md:text-sm font-medium text-gray-900 dark:text-gray-100 leading-snug"
             data-task-description
           >
             {task.description}
           </h4>
           {task.location && (
-            <div className="flex items-center space-x-1 text-xs text-gray-600 mt-0.5">
+            <div className="flex items-center space-x-1 text-xs text-gray-600 dark:text-gray-400 mt-0.5">
               <MapPin className="h-3 w-3" />
               <span className="truncate">{task.location}</span>
             </div>
@@ -183,8 +183,8 @@ export function DraggableTask({ task, onEdit, onDelete }: DraggableTaskProps) {
 
         {/* Template indicator */}
         {task.templateId && !task.isImported && (
-          <div className="flex items-center space-x-1 text-[10px] text-purple-600">
-            <div className="w-1.5 h-1.5 bg-purple-400 rounded-full" />
+          <div className="flex items-center space-x-1 text-[10px] text-purple-600 dark:text-purple-400">
+            <div className="w-1.5 h-1.5 bg-purple-400 dark:bg-purple-500 rounded-full" />
             <span>Vorlage</span>
           </div>
         )}
@@ -192,7 +192,7 @@ export function DraggableTask({ task, onEdit, onDelete }: DraggableTaskProps) {
 
       {/* Action buttons - Desktop only (hover to show) */}
       <div className="hidden md:block absolute right-2 top-1/2 transform -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-all duration-200">
-        <div className="flex items-center space-x-0.5 bg-white rounded-md shadow-sm border border-gray-200 p-0.5">
+        <div className="flex items-center space-x-0.5 bg-white dark:bg-gray-700 rounded-md shadow-sm border border-gray-200 dark:border-gray-600 p-0.5">
           <Button
             variant="ghost"
             size="sm"
@@ -200,12 +200,12 @@ export function DraggableTask({ task, onEdit, onDelete }: DraggableTaskProps) {
               e.stopPropagation();
               onEdit(task);
             }}
-            className="h-7 w-7 p-0 hover:bg-blue-50 hover:text-blue-600"
+            className="h-7 w-7 p-0 hover:bg-blue-50 dark:hover:bg-blue-900/30 hover:text-blue-600 dark:hover:text-blue-400"
             title="Aktivität bearbeiten"
           >
             <Edit className="h-3.5 w-3.5" />
           </Button>
-          <div className="w-px h-3.5 bg-gray-200" />
+          <div className="w-px h-3.5 bg-gray-200 dark:bg-gray-600" />
           <Button
             variant="ghost"
             size="sm"
@@ -213,7 +213,7 @@ export function DraggableTask({ task, onEdit, onDelete }: DraggableTaskProps) {
               e.stopPropagation();
               setDeleteConfirmOpen(true);
             }}
-            className="h-7 w-7 p-0 hover:bg-red-50 hover:text-red-600"
+            className="h-7 w-7 p-0 hover:bg-red-50 dark:hover:bg-red-900/30 hover:text-red-600 dark:hover:text-red-400"
             title={
               task.isImported ? "Aus Ansicht entfernen" : "Aktivität löschen"
             }
@@ -225,7 +225,7 @@ export function DraggableTask({ task, onEdit, onDelete }: DraggableTaskProps) {
 
       {/* Dragging indicator */}
       {isDragging && (
-        <div className="absolute inset-0 bg-blue-500 bg-opacity-10 rounded-md border-2 border-blue-400 border-dashed" />
+        <div className="absolute inset-0 bg-blue-500 dark:bg-blue-400 bg-opacity-10 dark:bg-opacity-20 rounded-md border-2 border-blue-400 dark:border-blue-500 border-dashed" />
       )}
 
       {/* Delete Confirmation Dialog */}

@@ -12,7 +12,7 @@ import {
 import { WeekSelector } from "@/components/WeekSelector";
 import { TaskDialog } from "@/components/TaskDialog";
 import { DroppableDay } from "@/components/DroppableDay";
-import { ICalManagement } from "@/components/ICalManagement";
+
 import { ConfirmDialog } from "@/components/ConfirmDialog";
 import { SettingsDialog } from "@/components/settings/SettingsDialog";
 import { ShareDialog } from "@/components/ShareDialog";
@@ -68,7 +68,9 @@ export function WeeklyAgenda() {
   const [weekTasks, setWeekTasks] = React.useState<Record<string, Task[]>>({});
   const [exportDialogOpen, setExportDialogOpen] = React.useState(false);
   const [previewOpen, setPreviewOpen] = React.useState(false);
-  const [icalManagementOpen, setIcalManagementOpen] = React.useState(false);
+  const [settingsTab, setSettingsTab] = React.useState<
+    "about" | "templates" | "export" | "ical"
+  >("about");
   const [isSyncingAll, setIsSyncingAll] = React.useState(false);
   const [draggedTask, setDraggedTask] = React.useState<Task | null>(null);
   const [toolbarScrolled, setToolbarScrolled] = React.useState(false);
@@ -76,9 +78,6 @@ export function WeeklyAgenda() {
   const [taskToDelete, setTaskToDelete] = React.useState<string | null>(null);
   const [syncConfirmOpen, setSyncConfirmOpen] = React.useState(false);
   const [settingsOpen, setSettingsOpen] = React.useState(false);
-  const [settingsTab, setSettingsTab] = React.useState<"about" | "templates">(
-    "about",
-  );
   const [shareDialogOpen, setShareDialogOpen] = React.useState(false);
   const [daySelectorOpen, setDaySelectorOpen] = React.useState(false);
 
@@ -413,10 +412,10 @@ export function WeeklyAgenda() {
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
     >
-      <div className="min-h-screen bg-gray-50 pb-24 md:pb-0">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 pb-24 md:pb-0">
         {/* Desktop Navigation Bar - Apple Style */}
         <div
-          className={`hidden md:block bg-white/95 backdrop-blur-md border-b border-gray-200/80 sticky top-0 z-40 transition-shadow duration-300 ${toolbarScrolled ? "shadow-md" : "shadow-sm"}`}
+          className={`hidden md:block bg-white/95 dark:bg-gray-800/95 backdrop-blur-md border-b border-gray-200/80 dark:border-gray-700/80 sticky top-0 z-40 transition-shadow duration-300 ${toolbarScrolled ? "shadow-md" : "shadow-sm"}`}
         >
           <div className="max-w-7xl mx-auto px-6 py-3">
             <div className="flex items-center justify-between gap-4">
@@ -427,7 +426,7 @@ export function WeeklyAgenda() {
                   alt="Weekly Planner Logo"
                   className="w-9 h-9"
                 />
-                <h1 className="text-xl font-semibold text-gray-900 tracking-tight hidden sm:block">
+                <h1 className="text-xl font-semibold text-gray-900 dark:text-gray-100 tracking-tight hidden sm:block">
                   Wochenplaner
                 </h1>
               </div>
@@ -449,7 +448,7 @@ export function WeeklyAgenda() {
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="h-9 px-3 text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-all"
+                      className="h-9 px-3 text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-all"
                       title="Neue Aktivität erstellen"
                     >
                       <Plus className="h-4 w-4" />
@@ -502,7 +501,7 @@ export function WeeklyAgenda() {
                   variant="ghost"
                   size="sm"
                   onClick={handlePreview}
-                  className="h-9 px-3 text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-all"
+                  className="h-9 px-3 text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-all"
                   title="Vorschau anzeigen"
                 >
                   <Eye className="h-4 w-4" />
@@ -514,7 +513,7 @@ export function WeeklyAgenda() {
                   variant="ghost"
                   size="sm"
                   onClick={() => setShareDialogOpen(true)}
-                  className="h-9 px-3 text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-all"
+                  className="h-9 px-3 text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-all"
                   title="Teilen"
                 >
                   <Share2 className="h-4 w-4" />
@@ -527,7 +526,7 @@ export function WeeklyAgenda() {
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="h-9 w-9 p-0 text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-all"
+                      className="h-9 w-9 p-0 text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-all"
                       title="Weitere Optionen"
                     >
                       <MoreVertical className="h-4 w-4" />
@@ -556,13 +555,6 @@ export function WeeklyAgenda() {
                     <DropdownMenuSeparator />
                     <DropdownMenuLabel>Kalender</DropdownMenuLabel>
                     <DropdownMenuItem
-                      onClick={() => setIcalManagementOpen(true)}
-                      className="cursor-pointer"
-                    >
-                      <Calendar className="h-4 w-4 mr-3 text-gray-600" />
-                      <span>iCal-Kalender</span>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
                       onClick={handleSyncAll}
                       disabled={isSyncingAll}
                       className="cursor-pointer"
@@ -587,7 +579,7 @@ export function WeeklyAgenda() {
                 <Button
                   size="sm"
                   onClick={handleExport}
-                  className="h-9 px-4 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg shadow-sm hover:shadow-md transition-all hover:-translate-y-0.5"
+                  className="h-9 px-4 bg-blue-600 dark:bg-blue-500 hover:bg-blue-700 dark:hover:bg-blue-600 text-white font-medium rounded-lg shadow-sm hover:shadow-md transition-all hover:-translate-y-0.5"
                 >
                   <Download className="h-4 w-4 mr-2" />
                   <span className="hidden sm:inline">Exportieren</span>
@@ -611,7 +603,6 @@ export function WeeklyAgenda() {
             setSettingsTab("templates");
             setSettingsOpen(true);
           }}
-          onIcal={() => setIcalManagementOpen(true)}
           onSyncAll={handleSyncAll}
           onExport={handleExport}
           isSyncing={isSyncingAll}
@@ -628,18 +619,25 @@ export function WeeklyAgenda() {
 
         {/* Main Content Area */}
         <div className="max-w-7xl mx-auto px-4 md:px-6 py-4 md:py-8">
+          {/* Mobile Header */}
+          <div className="md:hidden mb-4">
+            <h1 className="text-2xl font-semibold text-gray-900 dark:text-gray-100 tracking-tight">
+              Wochenschau
+            </h1>
+          </div>
+
           <div className="space-y-8" ref={agendaRef}>
             {/* Welcome Message */}
             {weekTasks &&
               Object.values(weekTasks).every((tasks) => tasks.length === 0) && (
-                <div className="bg-gradient-to-br from-blue-50 to-white border border-blue-100 rounded-2xl p-10 text-center shadow-sm hover:shadow-md transition-shadow">
-                  <div className="w-20 h-20 bg-gradient-to-br from-blue-600 to-blue-700 rounded-2xl flex items-center justify-center mx-auto mb-5 shadow-lg">
+                <div className="bg-gradient-to-br from-blue-50 to-white dark:from-gray-800 dark:to-gray-900 border border-blue-100 dark:border-gray-700 rounded-2xl p-10 text-center shadow-sm hover:shadow-md transition-shadow">
+                  <div className="w-20 h-20 bg-gradient-to-br from-blue-600 to-blue-700 dark:from-blue-500 dark:to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-5 shadow-lg">
                     <Calendar className="h-10 w-10 text-white" />
                   </div>
-                  <h3 className="text-2xl font-semibold text-gray-900 mb-3 tracking-tight">
+                  <h3 className="text-2xl font-semibold text-gray-900 dark:text-gray-100 mb-3 tracking-tight">
                     Willkommen bei Ihrem Wochenplaner!
                   </h3>
-                  <p className="text-gray-600 max-w-lg mx-auto mb-8 text-base leading-relaxed">
+                  <p className="text-gray-600 dark:text-gray-400 max-w-lg mx-auto mb-8 text-base leading-relaxed">
                     Erstellen Sie Aktivitäten-Vorlagen oder fügen Sie direkt
                     Aktivitäten zu Ihren Tagen hinzu. Vorlagen können Sie
                     einfach per Drag & Drop auf die gewünschten Tage ziehen.
@@ -649,7 +647,7 @@ export function WeeklyAgenda() {
                       onClick={() =>
                         handleAddTask(formatDateString(new Date()))
                       }
-                      className="h-11 px-6 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg shadow-sm hover:shadow-md transition-all hover:-translate-y-0.5"
+                      className="h-11 px-6 bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white font-medium rounded-lg shadow-sm hover:shadow-md transition-all hover:-translate-y-0.5"
                     >
                       <Plus className="h-4 w-4 mr-2" />
                       Erste Aktivität hinzufügen
@@ -660,7 +658,7 @@ export function WeeklyAgenda() {
                         setSettingsTab("templates");
                         setSettingsOpen(true);
                       }}
-                      className="h-11 px-6 rounded-lg border-gray-300 hover:border-gray-400 hover:bg-gray-50 transition-all"
+                      className="h-11 px-6 rounded-lg border-gray-300 dark:border-gray-600 hover:border-gray-400 dark:hover:border-gray-500 hover:bg-gray-50 dark:hover:bg-gray-800 transition-all"
                     >
                       <Settings className="h-4 w-4 mr-2" />
                       Vorlagen erstellen
@@ -701,13 +699,6 @@ export function WeeklyAgenda() {
           onSave={handleSaveTask}
           task={editingTask}
           date={selectedDate}
-        />
-
-        {/* iCal Management Dialog */}
-        <ICalManagement
-          open={icalManagementOpen}
-          onOpenChange={setIcalManagementOpen}
-          onTasksUpdated={loadWeekTasks}
         />
 
         {/* Preview Dialog */}
@@ -789,6 +780,7 @@ export function WeeklyAgenda() {
           open={settingsOpen}
           onOpenChange={setSettingsOpen}
           initialTab={settingsTab}
+          onTasksUpdated={loadWeekTasks}
         />
 
         {/* Share Dialog */}

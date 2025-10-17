@@ -35,13 +35,13 @@ export function MobileWeekSelector({
   };
 
   return (
-    <div className="flex items-center justify-center gap-2 px-2 py-1 bg-gray-50 rounded-lg border border-gray-200">
+    <div className="flex items-center justify-center gap-2 px-2 py-1 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
       {/* Year Selector */}
       <div className="flex flex-col items-center gap-0.5">
         <select
           value={year}
           onChange={handleYearChange}
-          className="appearance-none bg-transparent border-none text-base font-semibold text-gray-800 focus:outline-none cursor-pointer text-center"
+          className="appearance-none bg-transparent border-none text-base font-semibold text-gray-800 dark:text-gray-200 focus:outline-none cursor-pointer text-center"
           aria-label="Jahr auswählen"
         >
           {years.map((y) => (
@@ -50,20 +50,20 @@ export function MobileWeekSelector({
             </option>
           ))}
         </select>
-        <span className="text-[10px] text-gray-500 font-medium uppercase tracking-wide">
+        <span className="text-[10px] text-gray-500 dark:text-gray-400 font-medium uppercase tracking-wide">
           Jahr
         </span>
       </div>
 
       {/* Divider */}
-      <div className="w-px h-7 bg-gray-300" />
+      <div className="w-px h-7 bg-gray-300 dark:bg-gray-600" />
 
       {/* Week Selector */}
       <div className="flex flex-col items-center gap-0.5">
         <select
           value={week}
           onChange={handleWeekChange}
-          className="appearance-none bg-transparent border-none text-base font-semibold text-gray-800 focus:outline-none cursor-pointer text-center"
+          className="appearance-none bg-transparent border-none text-base font-semibold text-gray-800 dark:text-gray-200 focus:outline-none cursor-pointer text-center"
           aria-label="Kalenderwoche auswählen"
         >
           {weeks.map((w) => (
@@ -72,7 +72,7 @@ export function MobileWeekSelector({
             </option>
           ))}
         </select>
-        <span className="text-[10px] text-gray-500 font-medium uppercase tracking-wide">
+        <span className="text-[10px] text-gray-500 dark:text-gray-400 font-medium uppercase tracking-wide">
           KW
         </span>
       </div>
