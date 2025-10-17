@@ -12,10 +12,9 @@ import {
 import { WeekSelector } from "@/components/WeekSelector";
 import { TaskDialog } from "@/components/TaskDialog";
 import { DroppableDay } from "@/components/DroppableDay";
-import { TaskTemplatesSidebar } from "@/components/ActivityTemplatesSidebar";
 import { ICalManagement } from "@/components/ICalManagement";
 import { ConfirmDialog } from "@/components/ConfirmDialog";
-import { AboutDialog } from "@/components/AboutDialog";
+import { SettingsDialog } from "@/components/settings/SettingsDialog";
 import { ShareDialog } from "@/components/ShareDialog";
 import { MobileBottomNav } from "@/components/MobileBottomNav";
 import { DaySelectorSheet } from "@/components/DaySelectorSheet";
@@ -28,7 +27,6 @@ import {
 } from "@/components/ui/dialog";
 import { ExportDialog } from "@/components/ExportDialog";
 import { ExportPreview } from "@/components/ExportPreview";
-import { DraggableTaskTemplate } from "@/components/DraggableTaskTemplate";
 import { BibleVerse } from "@/components/BibleVerse";
 
 import { Button } from "@/components/ui/button";
@@ -41,24 +39,22 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
-  BookOpen,
   Download,
   Eye,
   Calendar,
   RefreshCw,
   Plus,
   MoreVertical,
-  Info,
+  Settings,
   Share2,
 } from "lucide-react";
 import { getCurrentWeek, getWeekDates, formatDateString } from "@/lib/utils";
-import type { Task, TaskTemplate } from "@/lib/storage";
+import type { Task } from "@/lib/storage";
 import {
   addTask,
   updateTask,
   deleteTask,
   getTasksForDate,
-  createTaskFromTemplate,
 } from "@/lib/storage";
 import { syncAllICalSources, loadICalSources } from "@/lib/ical";
 import { shareWeeklyAgenda } from "@/lib/share";
@@ -70,19 +66,19 @@ export function WeeklyAgenda() {
   const [editingTask, setEditingTask] = React.useState<Task | undefined>();
   const [selectedDate, setSelectedDate] = React.useState<string>("");
   const [weekTasks, setWeekTasks] = React.useState<Record<string, Task[]>>({});
-  const [sidebarOpen, setSidebarOpen] = React.useState(false);
   const [exportDialogOpen, setExportDialogOpen] = React.useState(false);
   const [previewOpen, setPreviewOpen] = React.useState(false);
   const [icalManagementOpen, setIcalManagementOpen] = React.useState(false);
   const [isSyncingAll, setIsSyncingAll] = React.useState(false);
-  const [draggedTemplate, setDraggedTemplate] =
-    React.useState<TaskTemplate | null>(null);
   const [draggedTask, setDraggedTask] = React.useState<Task | null>(null);
   const [toolbarScrolled, setToolbarScrolled] = React.useState(false);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = React.useState(false);
   const [taskToDelete, setTaskToDelete] = React.useState<string | null>(null);
   const [syncConfirmOpen, setSyncConfirmOpen] = React.useState(false);
-  const [aboutOpen, setAboutOpen] = React.useState(false);
+  const [settingsOpen, setSettingsOpen] = React.useState(false);
+  const [settingsTab, setSettingsTab] = React.useState<"about" | "templates">(
+    "about",
+  );
   const [shareDialogOpen, setShareDialogOpen] = React.useState(false);
   const [daySelectorOpen, setDaySelectorOpen] = React.useState(false);
 
@@ -223,23 +219,6 @@ export function WeeklyAgenda() {
     }
   };
 
-  const handleDropTemplate = (dateStr: string, startTime?: string) => {
-    if (!draggedTemplate) return;
-
-    const defaultStartTime = startTime || "09:00";
-
-    createTaskFromTemplate(
-      draggedTemplate,
-      currentWeekData.year,
-      currentWeekData.week,
-      dateStr,
-      defaultStartTime,
-    );
-
-    loadWeekTasks();
-    setDraggedTemplate(null);
-  };
-
   const handleDropTaskAtTime = (
     taskId: string,
     newDateStr: string,
@@ -278,12 +257,8 @@ export function WeeklyAgenda() {
   };
 
   const handleDragStart = (event: DragStartEvent) => {
-    if (event.active.data.current?.type === "template") {
-      setDraggedTemplate(event.active.data.current.template);
-      setDraggedTask(null);
-    } else if (event.active.data.current?.type === "task") {
+    if (event.active.data.current?.type === "task") {
       setDraggedTask(event.active.data.current.task);
-      setDraggedTemplate(null);
     }
   };
 
@@ -291,14 +266,11 @@ export function WeeklyAgenda() {
     const { active, over } = event;
 
     if (over && over.data.current?.type === "day") {
-      if (active.data.current?.type === "template") {
-        const dateStr = over.data.current.dateStr;
-        handleDropTemplate(dateStr);
-      } else if (active.data.current?.type === "task") {
+      if (active.data.current?.type === "task") {
         const task = active.data.current.task;
         const newDateStr = over.data.current.dateStr;
 
-        // If dropping on a different day or same day with different time
+        // If dropping on a different day
         if (task.date !== newDateStr) {
           // Move task to new day
           deleteTask(currentWeekData.year, currentWeekData.week, task.id);
@@ -314,7 +286,6 @@ export function WeeklyAgenda() {
       }
     }
 
-    setDraggedTemplate(null);
     setDraggedTask(null);
   };
 
@@ -577,11 +548,14 @@ export function WeeklyAgenda() {
                       <span>Wochenplan teilen</span>
                     </DropdownMenuItem>
                     <DropdownMenuItem
-                      onClick={() => setSidebarOpen(true)}
+                      onClick={() => {
+                        setSettingsTab("templates");
+                        setSettingsOpen(true);
+                      }}
                       className="cursor-pointer"
                     >
-                      <BookOpen className="h-4 w-4 mr-3 text-gray-600" />
-                      <span>Vorlagen verwalten</span>
+                      <Settings className="h-4 w-4 mr-3 text-gray-600" />
+                      <span>Einstellungen</span>
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuLabel>Kalender</DropdownMenuLabel>
@@ -607,13 +581,6 @@ export function WeeklyAgenda() {
                       </span>
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem
-                      onClick={() => setAboutOpen(true)}
-                      className="cursor-pointer"
-                    >
-                      <Info className="h-4 w-4 mr-3 text-gray-600" />
-                      <span>Über die App</span>
-                    </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
 
@@ -644,10 +611,12 @@ export function WeeklyAgenda() {
           onPreview={handlePreview}
           onShare={() => setShareDialogOpen(true)}
           onNativeShare={handleNativeShare}
-          onTemplates={() => setSidebarOpen(true)}
+          onSettings={() => {
+            setSettingsTab("templates");
+            setSettingsOpen(true);
+          }}
           onIcal={() => setIcalManagementOpen(true)}
           onSyncAll={handleSyncAll}
-          onAbout={() => setAboutOpen(true)}
           onExport={handleExport}
           isSyncing={isSyncingAll}
         />
@@ -691,10 +660,13 @@ export function WeeklyAgenda() {
                     </Button>
                     <Button
                       variant="outline"
-                      onClick={() => setSidebarOpen(true)}
+                      onClick={() => {
+                        setSettingsTab("templates");
+                        setSettingsOpen(true);
+                      }}
                       className="h-11 px-6 rounded-lg border-gray-300 hover:border-gray-400 hover:bg-gray-50 transition-all"
                     >
-                      <BookOpen className="h-4 w-4 mr-2" />
+                      <Settings className="h-4 w-4 mr-2" />
                       Vorlagen erstellen
                     </Button>
                   </div>
@@ -714,7 +686,6 @@ export function WeeklyAgenda() {
                     tasks={dayTasks}
                     onEditTask={handleEditTask}
                     onDeleteTask={handleDeleteTask}
-                    onDropTemplate={handleDropTemplate}
                     onDropTaskAtTime={handleDropTaskAtTime}
                     draggedTask={draggedTask}
                   />
@@ -734,12 +705,6 @@ export function WeeklyAgenda() {
           onSave={handleSaveTask}
           task={editingTask}
           date={selectedDate}
-        />
-
-        {/* Templates Sidebar */}
-        <TaskTemplatesSidebar
-          isOpen={sidebarOpen}
-          onToggle={() => setSidebarOpen(!sidebarOpen)}
         />
 
         {/* iCal Management Dialog */}
@@ -777,17 +742,6 @@ export function WeeklyAgenda() {
 
         {/* Drag Overlay */}
         <DragOverlay>
-          {draggedTemplate && (
-            <div className="transform rotate-2 opacity-90 scale-105">
-              <div className="bg-gradient-to-r from-blue-500 to-purple-600 p-0.5 rounded-lg shadow-2xl">
-                <DraggableTaskTemplate
-                  template={draggedTemplate}
-                  onEdit={() => {}}
-                  onDelete={() => {}}
-                />
-              </div>
-            </div>
-          )}
           {draggedTask && (
             <div className="transform rotate-1 opacity-90 scale-105">
               <div className="bg-gradient-to-r from-green-500 to-teal-600 p-0.5 rounded-lg shadow-2xl">
@@ -834,8 +788,12 @@ export function WeeklyAgenda() {
           variant="warning"
         />
 
-        {/* About Dialog */}
-        <AboutDialog open={aboutOpen} onOpenChange={setAboutOpen} />
+        {/* Settings Dialog */}
+        <SettingsDialog
+          open={settingsOpen}
+          onOpenChange={setSettingsOpen}
+          initialTab={settingsTab}
+        />
 
         {/* Share Dialog */}
         <ShareDialog

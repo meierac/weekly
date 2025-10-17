@@ -8,7 +8,6 @@ interface DroppableDayProps {
   tasks: Task[];
   onEditTask: (task: Task) => void;
   onDeleteTask: (taskId: string) => void;
-  onDropTemplate: (dateStr: string, startTime?: string) => void;
   onDropTaskAtTime: (
     taskId: string,
     newDateStr: string,
@@ -22,7 +21,6 @@ export function DroppableDay({
   tasks,
   onEditTask,
   onDeleteTask,
-  onDropTemplate,
   onDropTaskAtTime,
   draggedTask,
 }: DroppableDayProps) {
@@ -186,85 +184,42 @@ export function DroppableDay({
           </div>
         )}
 
-        {/* Drop zones for specific times when dragging */}
-        {isOver && (
+        {/* Drop zones for specific times when dragging tasks */}
+        {isOver && draggedTask && (
           <div className="mt-4 space-y-3 animate-in slide-in-from-top-2 duration-200">
-            <div
-              className={`
-              border-2 border-dashed rounded-md p-3
-              ${
-                draggedTask
-                  ? "border-green-300 bg-green-50"
-                  : "border-blue-300 bg-blue-50"
-              }
-            `}
-            >
-              <div className="flex items-center space-x-2 mb-3">
-                <Target
-                  className={`
-                  h-4 w-4
-                  ${draggedTask ? "text-green-600" : "text-blue-600"}
-                `}
-                />
-                <span
-                  className={`
-                  text-sm font-medium
-                  ${draggedTask ? "text-green-800" : "text-blue-800"}
-                `}
-                >
-                  {draggedTask
-                    ? "Neue Zeit für die Aktivität wählen:"
-                    : "Vorlage zu einer bestimmten Zeit hinzufügen:"}
-                </span>
-              </div>
+            <div className="border-2 border-dashed rounded-md p-3 border-green-300 bg-green-50">
+              <div className="space-y-3">
+                <div className="flex items-center space-x-2 mb-3">
+                  <Target className="h-4 w-4 text-green-600" />
+                  <span className="text-sm font-medium text-green-800">
+                    Neue Zeit für die Aktivität wählen:
+                  </span>
+                </div>
 
-              <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 gap-1.5 md:gap-1.5">
-                {timeSlots.map((time) => (
-                  <button
-                    key={time}
-                    onClick={() => {
-                      if (draggedTask) {
+                <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 gap-1.5 md:gap-1.5">
+                  {timeSlots.map((time) => (
+                    <button
+                      key={time}
+                      onClick={() => {
                         onDropTaskAtTime(draggedTask.id, dateStr, time);
-                      } else {
-                        onDropTemplate(dateStr, time);
-                      }
-                    }}
-                    className={`
-                      px-2 py-2 md:px-2 md:py-1.5 text-xs md:text-xs font-medium rounded-md md:rounded transition-all active:scale-95
-                      ${
-                        draggedTask
-                          ? "bg-white border border-green-200 hover:border-green-300 hover:bg-green-50 text-green-700 active:bg-green-100"
-                          : "bg-white border border-blue-200 hover:border-blue-300 hover:bg-blue-50 text-blue-700 active:bg-blue-100"
-                      }
-                    `}
-                  >
-                    {time}
-                  </button>
-                ))}
-              </div>
+                      }}
+                      className="px-2 py-2 md:px-2 md:py-1.5 text-xs md:text-xs font-medium rounded-md md:rounded transition-all active:scale-95 bg-white border border-green-200 hover:border-green-300 hover:bg-green-50 text-green-700 active:bg-green-100"
+                    >
+                      {time}
+                    </button>
+                  ))}
+                </div>
 
-              <div className="mt-3 pt-3 border-t border-gray-200">
-                <button
-                  onClick={() => {
-                    if (draggedTask) {
+                <div className="mt-3 pt-3 border-t border-gray-200">
+                  <button
+                    onClick={() => {
                       onDropTaskAtTime(draggedTask.id, dateStr, "09:00");
-                    } else {
-                      onDropTemplate(dateStr);
-                    }
-                  }}
-                  className={`
-                    w-full px-3 py-2 text-xs font-medium rounded-md transition-all
-                    ${
-                      draggedTask
-                        ? "bg-green-100 hover:bg-green-200 text-green-800 border border-green-300"
-                        : "bg-blue-100 hover:bg-blue-200 text-blue-800 border border-blue-300"
-                    }
-                  `}
-                >
-                  {draggedTask
-                    ? "Zur Standardzeit (09:00) verschieben"
-                    : "Zur Standardzeit (09:00) hinzufügen"}
-                </button>
+                    }}
+                    className="w-full px-3 py-2 text-xs font-medium rounded-md transition-all bg-green-100 hover:bg-green-200 text-green-800 border border-green-300"
+                  >
+                    Auf 09:00 Uhr setzen
+                  </button>
+                </div>
               </div>
             </div>
           </div>

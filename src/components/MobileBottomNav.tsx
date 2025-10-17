@@ -4,11 +4,10 @@ import {
   Plus,
   Eye,
   Share2,
-  BookOpen,
   Calendar,
   RefreshCw,
-  Info,
   Download,
+  Settings,
 } from "lucide-react";
 import { MobileWeekSelector } from "@/components/MobileWeekSelector";
 
@@ -20,10 +19,9 @@ interface MobileBottomNavProps {
   onPreview: () => void;
   onShare: () => void;
   onNativeShare: () => void;
-  onTemplates: () => void;
+  onSettings: () => void;
   onIcal: () => void;
   onSyncAll: () => void;
-  onAbout: () => void;
   onExport: () => void;
   isSyncing?: boolean;
 }
@@ -34,12 +32,10 @@ export function MobileBottomNav({
   onWeekChange,
   onAddTask,
   onPreview,
-  onShare,
   onNativeShare,
-  onTemplates,
+  onSettings,
   onIcal,
   onSyncAll,
-  onAbout,
   onExport,
   isSyncing = false,
 }: MobileBottomNavProps) {
@@ -261,17 +257,17 @@ export function MobileBottomNav({
                   <span className="text-xs">Export</span>
                 </Button>
 
-                {/* Templates */}
+                {/* Settings */}
                 <Button
                   variant="outline"
                   className="h-16 flex-col gap-1.5"
                   onClick={() => {
-                    onTemplates();
+                    onSettings();
                     setIsExpanded(false);
                   }}
                 >
-                  <BookOpen className="h-4 w-4" />
-                  <span className="text-xs">Vorlagen</span>
+                  <Settings className="h-4 w-4" />
+                  <span className="text-xs">Einstellungen</span>
                 </Button>
 
                 {/* iCal */}
@@ -301,19 +297,6 @@ export function MobileBottomNav({
                     className={`h-4 w-4 ${isSyncing ? "animate-spin" : ""}`}
                   />
                   <span className="text-xs">Sync</span>
-                </Button>
-
-                {/* About */}
-                <Button
-                  variant="outline"
-                  className="h-16 flex-col gap-1.5"
-                  onClick={() => {
-                    onAbout();
-                    setIsExpanded(false);
-                  }}
-                >
-                  <Info className="h-4 w-4" />
-                  <span className="text-xs">Info</span>
                 </Button>
               </div>
             </div>
